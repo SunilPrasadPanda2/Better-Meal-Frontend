@@ -1,0 +1,97 @@
+import React from "react";
+import Header from "@/components/common/Header";
+import { addFaq } from "@/api/admin";
+import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+export default function AddFaq() {
+  const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+  } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await addFaq(data);
+      if (response.message === "Faq created") {
+        navigate("/admin/faqs");
+        toast.success("Faq added successfully");
+        reset();
+      } else {
+        toast.error("Failed to add Faq");
+      }
+    } catch (error) {
+      toast.error("Failed to add Faq");
+    }
+  };
+
+  return (
+    <>
+      <Header
+        title="Create Faq"
+        breadcrumbs={[
+          {
+            text: "Faqs",
+            link: "/admin/faqs",
+          },
+        ]}
+      />
+      <div className="row">
+        <div className="col-lg-9 mt-4 mx-auto">
+          <div className="card border-0 p-4 rounded shadow">
+            <form className="mt-0" onSubmit={handleSubmit(onSubmit)}>
+              <div className="row">
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">Faq Question :</label>
+                    <input
+                      name="question"
+                      id="question"
+                      type="text"
+                      className={`form-control ${
+                        errors.question ? "is-invalid" : ""
+                      }`}
+                      placeholder="Faq Question"
+                      {...register("question", { required: true })}
+                    />
+                    {errors.question && (
+                      <span className="invalid-feedback">
+                        Question is required
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">Answer :</label>
+                    <textarea
+                      name="answer"
+                      id="answer"
+                      rows="2"
+                      className={`form-control ${
+                        errors.answer ? "is-invalid" : ""
+                      }`}
+                      placeholder="Answer"
+                      {...register("answer", { required: true })}
+                    ></textarea>
+                    {errors.answer && (
+                      <span className="invalid-feedback">
+                        Answer is required
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+              <button type="submit" className="btn btn-primary float-end">
+                Add Faq
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
