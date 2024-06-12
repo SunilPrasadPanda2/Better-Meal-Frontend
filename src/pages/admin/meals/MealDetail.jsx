@@ -3,10 +3,12 @@ import Header from "@/components/common/Header";
 import { getMeal } from "@/api/admin";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 
 const MealDetail = () => {
   const { _id } = useParams();
-  const [meal, setMeal] = useState(null); // Initialize meal to null
+  const [meal, setMeal] = useState(null);
+  const [isLoading, setIsLoading] = useState(true); // State for loading
 
   useEffect(() => {
     const fetchMeal = async () => {
@@ -16,13 +18,28 @@ const MealDetail = () => {
       } catch (error) {
         console.error("Error fetching meal data:", error);
         toast.error("Failed to fetch meal");
+      } finally {
+        setIsLoading(false); // Stop loading
       }
     };
     fetchMeal();
   }, [_id]);
 
+  if (isLoading) {
+    return (
+      <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "80vh" }}
+        >
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </div>
+    );
+  }
+
   if (!meal) {
-    return <div>Loading...</div>;
+    return <div>No meal data available.</div>;
   }
 
   const {
@@ -34,17 +51,15 @@ const MealDetail = () => {
     tags,
     image,
     quantity,
-    // Assuming you have a ratings field or any other relevant field
-    // ratings,
   } = meal;
 
-  // Ensure mealTiming and tags are defined before using them
   const safeMealTiming = mealTiming ? mealTiming.join(", ") : "";
   const safeTags = tags ? tags.map(tag => tag.tagName).join(", ") : "";
+
   return (
     <>
       <Header
-        title="Meals Detail"
+        title={mealName}
         breadcrumbs={[
           {
             text: "Meals",
@@ -77,12 +92,6 @@ const MealDetail = () => {
               <div className="tab-content mt-0" id="pills-tabContent">
                 <div className="tab-pane fade show active">
                   <div className="row">
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex ">
-                        <h6 className="mb-0 me-2">Description: </h6>
-                        <p className="text-muted mb-0">{description}</p>
-                      </div>
-                    </div>
 
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
@@ -121,9 +130,15 @@ const MealDetail = () => {
 
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
-                        {/* The Ratings field is hardcoded; replace it with dynamic data if available */}
                         <h6 className="mb-0 me-2">Ratings: </h6>
                         <p className="text-muted mb-0">5 Star</p>
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
+                      <div className="mb-3 d-flex ">
+                        <h6 className="mb-0 me-2">Description: </h6>
+                        <p className="text-muted mb-0">{description}</p>
                       </div>
                     </div>
                   </div>

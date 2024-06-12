@@ -4,11 +4,13 @@ import { getFaq, EditFaqs } from "@/api/admin";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
+import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 
 export default function EditFaq() {
   const { _id } = useParams(); // Assuming you're using react-router to get the FAQ id from the URL
   const { register, setValue, handleSubmit } = useForm();
   const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,6 +32,7 @@ export default function EditFaq() {
 
   const onSubmit = async (data) => {
     try {
+      setUpdating(true); // Set updating state to true while API request is being made
       const updatedData = { ...data, _id }; // Include the _id in the data being sent
       await EditFaqs(updatedData);
       toast.success("FAQ updated successfully!");
@@ -37,11 +40,22 @@ export default function EditFaq() {
     } catch (error) {
       console.error("Error updating FAQ:", error);
       toast.error("Failed to update FAQ.");
+    } finally {
+      setUpdating(false); // Reset updating state when API request is completed
     }
   };
 
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "80vh" }}
+        >
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </div>
+    );
   }
 
   return (
@@ -66,7 +80,7 @@ export default function EditFaq() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Faq Question :</label>
+                    <label className="form-label">Faq Question :<span className="text-danger">*</span></label>
                     <input
                       {...register("question")}
                       id="question"
@@ -78,7 +92,7 @@ export default function EditFaq() {
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Answer :</label>
+                    <label className="form-label">Answer :<span className="text-danger">*</span></label>
                     <textarea
                       {...register("answer")}
                       id="answer"
@@ -89,8 +103,15 @@ export default function EditFaq() {
                   </div>
                 </div>
               </div>
-              <button type="submit" className="btn btn-success float-end">
-                Update Faq
+              <button type="submit" className="btn btn-success float-end" disabled={updating}>
+                {updating ? (
+                  <>
+                    <Spinner animation="border" size="sm" role="status" />
+                    <span className="visually-hidden">Updating...</span>
+                  </>
+                ) : (
+                  "Update Faq"
+                )}
               </button>
             </form>
           </div>

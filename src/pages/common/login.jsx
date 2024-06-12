@@ -64,15 +64,23 @@ const Login = () => {
       >
         <div className="container">
           <div className="row justify-content-center">
-            <div className="col-lg-5 col-md-8">
+            <div className="col-lg-8 col-md-6 col-sm-4">
               {/* <img
                 src={logoDark}
                 height="22"
                 className="mx-auto d-block"
                 alt=""
               /> */}
-              <div className="card login-page shadow mt-4 rounded border-0">
+              <div
+                className="card login-page shadow mt-4 rounded border-0"
+                style={{ height: "400px" }}
+              >
                 <div className="card-body">
+                  <h3 className="text-center">
+                    <span className="text-decoration-underline">
+                      Better-Meal
+                    </span>
+                  </h3>
                   <h4 className="text-center">Sign In</h4>
                   <form
                     className="login-form mt-4"
@@ -109,7 +117,7 @@ const Login = () => {
                       </div>
 
                       <div className="col-lg-12">
-                        <div className="mb-3">
+                        <div className="mb-5">
                           <label className="form-label">
                             Password <span className="text-danger">*</span>
                           </label>
@@ -135,7 +143,7 @@ const Login = () => {
                         </div>
                       </div>
 
-                      <div className="col-lg-12">
+                      {/* <div className="col-lg-12">
                         <div className="d-flex justify-content-between">
                           <div className="mb-3">
                             <div className="form-check">
@@ -160,14 +168,14 @@ const Login = () => {
                             Forgot password ?
                           </Link>
                         </div>
-                      </div>
+                      </div> */}
                       <div className="col-lg-12 mb-0">
                         <div className="d-grid">
                           <button className="btn btn-primary">Sign in</button>
                         </div>
                       </div>
 
-                      <div className="col-lg-12 mt-3 text-center">
+                      {/* <div className="col-lg-12 mt-3 text-center">
                         <h6 className="text-muted">Or</h6>
                       </div>
 
@@ -185,9 +193,9 @@ const Login = () => {
                             <SlSocialGoogle /> Google
                           </Link>
                         </div>
-                      </div>
+                      </div> */}
 
-                      <div className="col-12 text-center">
+                      {/* <div className="col-12 text-center">
                         <p className="mb-0 mt-3">
                           <small className="text-dark me-2">
                             Don't have an account ?
@@ -196,7 +204,7 @@ const Login = () => {
                             Sign Up
                           </Link>
                         </p>
-                      </div>
+                      </div> */}
                     </div>
                   </form>
                 </div>

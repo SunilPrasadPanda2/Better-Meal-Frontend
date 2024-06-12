@@ -73,7 +73,7 @@ export default function AddExplore() {
                     />
                   </div>
                   <div className="col-lg-5 col-md-8 text-center text-md-start mt-4 mt-sm-0">
-                    <label className="form-label">Explpore Image</label>
+                    <label className="form-label">Explore Image</label>
                     <input
                       type="file"
                       name="image"
@@ -188,7 +188,7 @@ export default function AddExplore() {
                   </div>
                 </div>
               </div>
-              <button className="btn btn-primary">Add Explore</button>
+              <button className="btn btn-success float-end">Add Explore</button>
             </form>
           </div>
         </div>

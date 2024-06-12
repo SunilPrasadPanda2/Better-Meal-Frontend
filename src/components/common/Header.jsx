@@ -24,7 +24,7 @@ const Header = ({ title, buttons, breadcrumbs }) => {
       <div className="col-xl-3 col-md-6 mt-4 mt-md-0 text-md-end">
         {buttons &&
           buttons.map((button, index) => (
-            <Link key={index} to={button.link} className="btn btn-primary">
+            <Link key={index} to={button.link} className="btn btn-secondary">
               {button.text}
             </Link>
           ))}

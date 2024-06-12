@@ -5,11 +5,13 @@ import { getMealQuestion, editMealQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
 import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlus, FaMinus } from "react-icons/fa";
+import { Spinner } from "react-bootstrap"; // assuming you have react-bootstrap installed
 
 export default function EditMealQuestion() {
   const navigate = useNavigate();
   const { _id } = useParams();
   const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false); // add submitting state
   const {
     register,
     control,
@@ -31,6 +33,7 @@ export default function EditMealQuestion() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true); // set loading to true before fetching data
         const data = await getMealQuestion(_id);
         setValue("question", data.data.question);
         setValue(
@@ -53,13 +56,16 @@ export default function EditMealQuestion() {
 
   const onSubmit = async (formData) => {
     try {
+      setSubmitting(true); // set submitting to true before API call
       // Convert mealIds from a comma-separated string to an array
       const updateData = {
         ...formData,
         _id,
         options: formData.options.map((option) => ({
           ...option,
-          mealIds: option.mealIds ? option.mealIds.split(",").map((id) => id.trim()) : [],
+          mealIds: option.mealIds
+            ? option.mealIds.split(",").map((id) => id.trim())
+            : [],
         })),
       };
 
@@ -75,13 +81,23 @@ export default function EditMealQuestion() {
         error.response ? error.response.data : error
       );
       toast.error("Failed to update meal question");
+    } finally {
+      setSubmitting(false); // set submitting to false after API call
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "80vh" }}
+        >
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </div>
+    );
   }
-
   return (
     <>
       <Header
@@ -98,13 +114,14 @@ export default function EditMealQuestion() {
         ]}
       />
       <div className="row d-flex justify-content-center">
-        <div className="col-lg-10 mt-4">
+        <div className="col-lg-9 mt-4">
           <div className="card border-0 p-4 rounded shadow">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-12">
+                  {/* Form inputs */}
                   <div className="mb-3">
-                    <label className="form-label">Question:</label>
+                    <label className="form-label">Question :<span className="text-danger">*</span></label>
                     <input
                       name="question"
                       id="question"
@@ -123,7 +140,7 @@ export default function EditMealQuestion() {
                   </div>
                   {fields.map((field, index) => (
                     <div key={field.id} className="mb-3">
-                      <label className="form-label">Option {index + 1}:</label>
+                      <label className="form-label">Option {index + 1} :<span className="text-danger">*</span></label>
                       <div className="d-flex">
                         <input
                           name={`options[${index}].option`}
@@ -181,8 +198,19 @@ export default function EditMealQuestion() {
                 </div>
               </div>
               <hr />
-              <button className="btn btn-success mt-1 float-end" type="submit">
-                Update Question
+              <button
+                className="btn btn-success mt-1 float-end"
+                type="submit"
+                disabled={submitting}
+              >
+                {submitting ? (
+                  <>
+                    <Spinner animation="border" size="sm" role="status" />
+                    <span className="visually-hidden">Updating...</span>
+                  </>
+                ) : (
+                  "Update Question"
+                )}
               </button>
             </form>
           </div>

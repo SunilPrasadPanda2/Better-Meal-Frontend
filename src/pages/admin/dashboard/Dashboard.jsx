@@ -15,7 +15,7 @@ const Index = () => {
     <>
       <h5 className="mb-0">Dashboard</h5>
       <div className="row">
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/meals`}
             className="d-flex align-items-center my-auto"
@@ -37,7 +37,7 @@ const Index = () => {
           </Link>
         </div>
 
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/mealsPrefQuestions`}
             className="d-flex align-items-center my-auto"
@@ -58,7 +58,7 @@ const Index = () => {
             </div>
           </Link>
         </div>
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/tags`}
             className="d-flex align-items-center my-auto"
@@ -79,7 +79,7 @@ const Index = () => {
             </div>
           </Link>
         </div>
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/faqs`}
             className="d-flex align-items-center my-auto"
@@ -100,7 +100,7 @@ const Index = () => {
             </div>
           </Link>
         </div>
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/explores`}
             className="d-flex align-items-center my-auto"
@@ -121,7 +121,7 @@ const Index = () => {
             </div>
           </Link>
         </div>
-        <div className="col-xl-4 col-md-8 mt-4">
+        <div className="col-xl-4 col-md-6 mt-4">
           <Link
             to={`/admin/gutSurvQuestions`}
             className="d-flex align-items-center my-auto"

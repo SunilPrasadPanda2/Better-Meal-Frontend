@@ -3,10 +3,12 @@ import Header from "@/components/common/Header";
 import { useParams } from "react-router-dom";
 import { getFaq } from "@/api/admin";
 import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 
 export default function FaqDetail() {
   const { _id } = useParams();
   const [faq, setFaq] = useState(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchFaq = async () => {
@@ -15,14 +17,25 @@ export default function FaqDetail() {
         setFaq(response.data);
       } catch (error) {
         toast.error("Failed to fetch FAQ details");
+      } finally {
+        setLoading(false); // Set loading to false whether the request succeeds or fails
       }
     };
 
     fetchFaq();
   }, [_id]);
 
-  if (!faq) {
-    return <div>Loading...</div>;
+  if (loading) {
+    return (
+      <div
+          className="d-flex justify-content-center align-items-center"
+          style={{ height: "80vh" }}
+        >
+          <Spinner animation="border" role="status">
+            <span className="sr-only">Loading...</span>
+          </Spinner>
+        </div>
+    );
   }
 
   return (

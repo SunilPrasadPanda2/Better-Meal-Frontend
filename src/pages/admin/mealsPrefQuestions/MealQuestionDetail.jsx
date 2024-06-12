@@ -3,10 +3,12 @@ import Header from "@/components/common/Header";
 import { useParams } from "react-router-dom";
 import { getMealQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
+import { Spinner } from "react-bootstrap"; // assuming you have react-bootstrap installed
 
 export default function MealQuestionDetail() {
   const { _id } = useParams();
   const [mealQuestion, setMealQuestion] = useState(null);
+  const [loading, setLoading] = useState(true); // add loading state
 
   useEffect(() => {
     const fetchMealQuestion = async () => {
@@ -16,11 +18,26 @@ export default function MealQuestionDetail() {
       } catch (error) {
         console.error("Error fetching meal data:", error);
         toast.error("Failed to fetch meal question data");
+      } finally {
+        setLoading(false); // set loading to false when API call completes
       }
     };
 
     fetchMealQuestion();
   }, [_id]);
+
+  if (loading) {
+    return (
+      <div
+      className="d-flex justify-content-center align-items-center"
+      style={{ height: "80vh" }}
+    >
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
+    </div>
+    );
+  }
 
   if (!mealQuestion) {
     return <div>Loading...</div>;

@@ -8,7 +8,7 @@ export default function Footer(){
                 <div className="row align-items-center">
                     <div className="col">
                         <div className="text-sm-start text-center">
-                            <p className="mb-0 text-muted">{new Date().getFullYear()} © Medy. Powered by Medhike.</p>
+                            <p className="mb-0 text-muted">{new Date().getFullYear()} © Better-Meal. Powered by Kods.</p>
                         </div>
                     </div>
                 </div>

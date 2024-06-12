@@ -46,7 +46,7 @@ export default function AddFaq() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Faq Question :</label>
+                    <label className="form-label">Faq Question :<span className="text-danger">*</span></label>
                     <input
                       name="question"
                       id="question"
@@ -66,7 +66,7 @@ export default function AddFaq() {
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Answer :</label>
+                    <label className="form-label">Answer :<span className="text-danger">*</span></label>
                     <textarea
                       name="answer"
                       id="answer"
@@ -85,7 +85,7 @@ export default function AddFaq() {
                   </div>
                 </div>
               </div>
-              <button type="submit" className="btn btn-primary float-end">
+              <button type="submit" className="btn btn-success float-end">
                 Add Faq
               </button>
             </form>
