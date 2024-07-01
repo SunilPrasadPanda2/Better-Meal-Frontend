@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import Header from "@/components/common/Header";
 import { getAllMeal } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner, Tooltip, OverlayTrigger, Pagination } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Tooltip, OverlayTrigger } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 const Meals = () => {
   const [meals, setMeals] = useState([]);
@@ -64,11 +65,9 @@ const Meals = () => {
       {isLoading ? (
         <div
           className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
+          style={{ height: "70vh" }}
         >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+          <Loading />
         </div>
       ) : (
         <>
@@ -76,7 +75,16 @@ const Meals = () => {
             {currentMeals.length > 0 ? (
               currentMeals.map((meal) => (
                 <div className="col mt-4" key={meal._id}>
-                  <div className="card team border-0 rounded shadow overflow-hidden h-100">
+                  <div
+                    className="card team border-0 rounded shadow overflow-hidden h-100"
+                    style={{ transition: "transform 0.2s" }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                  >
                     <Link to={`${meal._id}`} className="text-dark">
                       <div className="team-img position-relative">
                         <img
@@ -91,13 +99,17 @@ const Meals = () => {
                         />
                         <hr className="mt-0 mb-0" />
                       </div>
-                      <div className="card-body content text-center d-flex flex-column justify-content-center">
+                      <div
+                        className="card-body content text-center d-flex flex-column justify-content-center"
+                        style={{ opacity: "0.8" }}
+                      >
                         <OverlayTrigger
                           placement="bottom"
                           className="mb-0"
                           overlay={
                             <Tooltip id={`tooltip-${meal._id}`}>
-                              {meal.mealName}
+                              {meal.mealName.charAt(0).toUpperCase() +
+                                meal.mealName.slice(1)}
                             </Tooltip>
                           }
                         >
@@ -105,7 +117,8 @@ const Meals = () => {
                             className="h5 text-truncate"
                             style={{ width: "100%", whiteSpace: "nowrap" }}
                           >
-                            {meal.mealName}
+                            {meal.mealName.charAt(0).toUpperCase() +
+                              meal.mealName.slice(1)}
                           </p>
                         </OverlayTrigger>
                       </div>

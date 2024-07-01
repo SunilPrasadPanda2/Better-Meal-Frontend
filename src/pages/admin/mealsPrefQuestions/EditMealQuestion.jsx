@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlus, FaMinus } from "react-icons/fa";
 import { Spinner } from "react-bootstrap"; // assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 export default function EditMealQuestion() {
   const navigate = useNavigate();
@@ -21,7 +22,7 @@ export default function EditMealQuestion() {
   } = useForm({
     defaultValues: {
       question: "",
-      options: [{ option: "", mealIds: "" }],
+      options: [{ option: "" }],
     },
   });
 
@@ -39,8 +40,7 @@ export default function EditMealQuestion() {
         setValue(
           "options",
           data.data.options.map((option) => ({
-            ...option,
-            mealIds: option.mealIds.join(", "),
+            option: option.option,
           }))
         );
         setLoading(false);
@@ -57,24 +57,18 @@ export default function EditMealQuestion() {
   const onSubmit = async (formData) => {
     try {
       setSubmitting(true); // set submitting to true before API call
-      // Convert mealIds from a comma-separated string to an array
+      // Convert formData to the expected format
       const updateData = {
         ...formData,
         _id,
         options: formData.options.map((option) => ({
-          ...option,
-          mealIds: option.mealIds
-            ? option.mealIds.split(",").map((id) => id.trim())
-            : [],
+          option: option.option,
         })),
       };
 
-      // Remove _id fields from the options
-      updateData.options = updateData.options.map(({ _id, ...rest }) => rest);
-
       await editMealQuestion(updateData);
       toast.success("Meal question updated successfully");
-      navigate("/admin/mealsPrefQuestions");
+      navigate(`/admin/mealsPrefQuestions/${_id}`);
     } catch (error) {
       console.error(
         "Error updating meal question:",
@@ -89,13 +83,11 @@ export default function EditMealQuestion() {
   if (loading) {
     return (
       <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
   return (
@@ -121,7 +113,9 @@ export default function EditMealQuestion() {
                 <div className="col-md-12">
                   {/* Form inputs */}
                   <div className="mb-3">
-                    <label className="form-label">Question :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Question :<span className="text-danger">*</span>
+                    </label>
                     <input
                       name="question"
                       id="question"
@@ -140,7 +134,10 @@ export default function EditMealQuestion() {
                   </div>
                   {fields.map((field, index) => (
                     <div key={field.id} className="mb-3">
-                      <label className="form-label">Option {index + 1} :<span className="text-danger">*</span></label>
+                      <label className="form-label">
+                        Option {index + 1} :
+                        <span className="text-danger">*</span>
+                      </label>
                       <div className="d-flex">
                         <input
                           name={`options[${index}].option`}
@@ -167,30 +164,12 @@ export default function EditMealQuestion() {
                           Option is required
                         </span>
                       )}
-                      <div className="mt-2">
-                        <label className="form-label">Meal IDs :</label>
-                        <input
-                          name={`options[${index}].mealIds`}
-                          id={`mealIds-${index}`}
-                          type="text"
-                          className={`form-control ${
-                            errors.options?.[index]?.mealIds ? "is-invalid" : ""
-                          }`}
-                          placeholder="Meal ID1, Meal ID2"
-                          {...register(`options[${index}].mealIds`)}
-                        />
-                        {errors.options?.[index]?.mealIds && (
-                          <span className="invalid-feedback">
-                            Meal IDs are required
-                          </span>
-                        )}
-                      </div>
                     </div>
                   ))}
                   <button
                     type="button"
                     className="btn btn-primary mt-2"
-                    onClick={() => append({ option: "", mealIds: "" })}
+                    onClick={() => append({ option: "" })}
                   >
                     <FaPlus className="me-2" />
                     Add Option

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "@/components/common/Header";
-import { getAllGutSurvQuestions } from "@/api/admin";
+import { getAllGutSurvQuestions, deleteGutQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
 import { FaEye } from "react-icons/fa";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Modal, Button } from "react-bootstrap";
+import Loading from "@/pages/common/loading";
+import { MdAutoDelete } from "react-icons/md";
 
 export default function GutSurvQuestions() {
+  const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedQuestionId, setSelectedQuestionId] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 10;
 
@@ -28,6 +33,27 @@ export default function GutSurvQuestions() {
     fetchQuestions();
   }, []);
 
+  const handleDeleteClick = (questionId) => {
+    setSelectedQuestionId(questionId);
+    setShowConfirm(true);
+  };
+  const confirmDelete = async () => {
+    setShowConfirm(false);
+    try {
+      setLoading(true);
+      await deleteGutQuestion({ _id: selectedQuestionId });
+      setQuestions((questions) =>
+        questions.filter((question) => question._id !== selectedQuestionId)
+      );
+      navigate("/admin/gutSurvQuestions");
+      toast.success("Question deleted successfully");
+    } catch (error) {
+      console.error("Error deleting question:", error);
+      toast.error("Failed to delete question");
+    } finally {
+      setLoading(false);
+    }
+  };
   // Calculate index of the first and last question of the current page
   const indexOfLastQuestion = currentPage * questionsPerPage;
   const indexOfFirstQuestion = indexOfLastQuestion - questionsPerPage;
@@ -40,24 +66,22 @@ export default function GutSurvQuestions() {
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
   // Go to previous page
   const goToPreviousPage = () => {
-      setCurrentPage(currentPage - 1);
+    setCurrentPage(currentPage - 1);
   };
 
   // Go to next page
   const goToNextPage = () => {
-      setCurrentPage(currentPage + 1);
+    setCurrentPage(currentPage + 1);
   };
 
   if (loading) {
     return (
       <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
 
@@ -80,7 +104,8 @@ export default function GutSurvQuestions() {
                 <tr>
                   <th className="border-bottom p-3 col-1">Id</th>
                   <th className="border-bottom p-3 col-9">Question</th>
-                  <th className="border-bottom p-3 col-2">Get Detail</th>
+                  <th className="border-bottom p-3 col-1">Details</th>
+                  <th className="border-bottom p-3 col-1">Delete</th>
                 </tr>
               </thead>
               <tbody>
@@ -89,8 +114,12 @@ export default function GutSurvQuestions() {
                     <th className="p-3 col-1">
                       {indexOfFirstQuestion + index + 1}
                     </th>
-                    <td className="p-3 col-9">{question.question}</td>
-                    <td className="p-3 col-2">
+                    <td className="p-3 col-9">
+                      {question.question.charAt(0).toUpperCase() +
+                        question.question.slice(1)}
+                    </td>
+
+                    <td className="p-3 col-1">
                       <Link
                         to={`${question._id}`}
                         className="title text-dark h5 d-block mb-0"
@@ -99,6 +128,14 @@ export default function GutSurvQuestions() {
                           <FaEye />
                         </button>
                       </Link>
+                    </td>
+                    <td className="p-3 col-1">
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteClick(question._id)}
+                      >
+                        <MdAutoDelete className="fs-5" />
+                      </button>
                     </td>
                   </tr>
                 ))}
@@ -166,6 +203,20 @@ export default function GutSurvQuestions() {
           </ul>
         </nav>
       )}
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this meal?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={confirmDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

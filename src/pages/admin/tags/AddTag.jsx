@@ -53,7 +53,7 @@ export default function AddTag() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Tag Name :<span className="text-danger">*</span></label>
+                    <label className="form-label">Tag Name <span className="text-danger">*</span></label>
                     <input
                       name="tag"
                       id="tag"

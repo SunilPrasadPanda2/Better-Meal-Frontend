@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from "react";
 import Header from "@/components/common/Header";
-import { getAllTags } from "@/api/admin";
+import { getAllTags, deleteTag } from "@/api/admin";
 import { toast } from "react-toastify";
 import { MdDelete } from "react-icons/md";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Modal, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+import Loading from "@/pages/common/loading";
 
 export default function Tags() {
+  const navigate = useNavigate();
   const [tags, setTags] = useState([]);
   const [loading, setLoading] = useState(true); // Add loading state
   const [currentPage, setCurrentPage] = useState(1);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [tagToDelete, setTagToDelete] = useState(null);
   const tagsPerPage = 10; // Display only 5 tags per page
 
   useEffect(() => {
@@ -49,6 +54,29 @@ export default function Tags() {
     }
   };
 
+  // Show delete confirmation modal
+  const showDeleteConfirm = (tagId) => {
+    setTagToDelete(tagId);
+    setShowConfirm(true);
+  };
+
+  const handleDelete = async () => {
+    setShowConfirm(false);
+    if (!tagToDelete) return;
+
+    try {
+      setLoading(true);
+      await deleteTag(tagToDelete);
+      setTags(tags.filter((tag) => tag._id !== tagToDelete));
+      navigate("/admin/tags");
+      toast.success("Tag deleted successfully");
+    } catch (error) {
+      console.error("Error deleting tag:", error);
+      toast.error("Failed to delete tag");
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <>
       <Header
@@ -65,11 +93,9 @@ export default function Tags() {
           {loading ? ( // Render spinner if loading is true
             <div
               className="d-flex justify-content-center align-items-center"
-              style={{ height: "80vh" }}
+              style={{ height: "70vh" }}
             >
-              <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
-              </Spinner>
+              <Loading />
             </div>
           ) : (
             <div className="table-responsive shadow rounded">
@@ -88,9 +114,16 @@ export default function Tags() {
                     return (
                       <tr key={tag._id}>
                         <th className="p-3 col-2">{continuousIndex}</th>
-                        <td className="p-3 col-4">{tag.tagName}</td>
+                        <td className="p-3 col-4">
+                          {tag.tagName.charAt(0).toUpperCase() +
+                            tag.tagName.slice(1)}
+                        </td>
+
                         <td className="p-3 col-2">
-                          <button className="btn btn-danger">
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => showDeleteConfirm(tag._id)}
+                          >
                             <MdDelete />
                           </button>
                         </td>
@@ -166,6 +199,20 @@ export default function Tags() {
           )}
         </div>
       </div>
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this tag?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

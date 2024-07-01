@@ -3,7 +3,7 @@ import Header from "@/components/common/Header";
 import { useParams } from "react-router-dom";
 import { getSurvQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 export default function GutSurvDetail() {
   const { _id } = useParams();
@@ -29,13 +29,11 @@ export default function GutSurvDetail() {
   if (loading) {
     return (
       <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
 
@@ -56,13 +54,17 @@ export default function GutSurvDetail() {
           },
         ]}
       />
-      
+
       <div className="card rounded shadow overflow-hidden mt-4 border-0 col-md-8 mx-auto">
         <div className="p-2 bg-primary bg-gradient"></div>
         <div className="avatar-profile d-flex margin-negative mt-n5 position-relative ps-3 pt-2">
           <div className="mt-4 ms-3 pt-3">
             <h6 className="mb-0 me-2">Question :</h6>
-            <p className="mt-3 mb-1 ms-4">{questionData?.question}</p>
+            <p className="mt-3 mb-1 ms-4">
+              {questionData?.question &&
+                questionData.question.charAt(0).toUpperCase() +
+                  questionData.question.slice(1)}
+            </p>
           </div>
         </div>
         <div className="row">
@@ -75,7 +77,11 @@ export default function GutSurvDetail() {
                       <div className="mb-3">
                         <h6 className="mb-0 me-2">Gender</h6>
                         <div className="ms-4">
-                          <p className="text-muted mb-0">{questionData?.gender}</p>
+                          <p className="text-muted mb-0">
+                            {questionData?.gender &&
+                              questionData.gender.charAt(0).toUpperCase() +
+                                questionData.gender.slice(1)}
+                          </p>
                         </div>
                       </div>
                     </div>

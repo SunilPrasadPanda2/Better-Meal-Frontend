@@ -14,10 +14,15 @@ export default function AddGutQuestion() {
   const onSubmit = async (data) => {
     setLoading(true); // Set loading to true when form is submitted
     try {
-      await addGutSurveyQuestion(data);
-      toast.success("Question added successfully!");
-      reset(); // Reset the form fields
-      navigate("/admin/gutSurvQuestions"); // Redirect to questions list
+      const response = await addGutSurveyQuestion(data);
+      if (response.data) {
+        toast.success("Question added successfully!");
+        reset(); // Reset the form fields
+        navigate("/admin/gutSurvQuestions"); // Redirect to questions list
+      } else if (response.response.status === 400) {
+        toast.error(response.response.data.message);
+        navigate("/admin/gutSurvQuestions");
+      }
     } catch (error) {
       console.error("Error adding question:", error);
       toast.error("Failed to add question.");
@@ -44,7 +49,9 @@ export default function AddGutQuestion() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Gut Survey Question :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Gut Survey Question <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="question"
                       id="question"
@@ -58,7 +65,7 @@ export default function AddGutQuestion() {
                 <div className="col-md-12">
                   <div className="mb-3">
                     <label htmlFor="gender" className="form-label">
-                      Gender :<span className="text-danger">*</span>
+                      Gender <span className="text-danger">*</span>
                     </label>
                     <select
                       className="form-select form-control"

@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { MdAdd } from "react-icons/md";
+import { MdEditNote } from "react-icons/md";
 const Header = ({ title, buttons, breadcrumbs }) => {
   return (
     <div className="row">
@@ -22,13 +24,15 @@ const Header = ({ title, buttons, breadcrumbs }) => {
         </nav>
       </div>
       <div className="col-xl-3 col-md-6 mt-4 mt-md-0 text-md-end">
-        {buttons &&
-          buttons.map((button, index) => (
-            <Link key={index} to={button.link} className="btn btn-secondary">
-              {button.text}
-            </Link>
-          ))}
-      </div>
+      {buttons &&
+        buttons.map((button, index) => (
+          <Link key={index} to={button.link} className="btn btn-secondary">
+            {button.text.startsWith('Add') && <MdAdd className="me-0 fs-4" />} {/* Render Add icon if text starts with "Add" */}
+            {button.text.startsWith('Edit') && <MdEditNote className="me-0 fs-4"/>} {/* Render Edit icon if text starts with "Edit" */}
+            {button.text}
+          </Link>
+        ))}
+    </div>
     </div>
   );
 };

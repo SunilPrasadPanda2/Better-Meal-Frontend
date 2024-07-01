@@ -5,24 +5,27 @@ import { getAllFaqs, deleteFaq } from "@/api/admin";
 import { toast } from "react-toastify";
 import { FaEye } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
+import { Modal, Button } from "react-bootstrap";
 
 export default function Faqs() {
   const [faqs, setFaqs] = useState([]);
-  const [loading, setLoading] = useState(true); // Add loading state
+  const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [faqToDelete, setFaqToDelete] = useState(null); // State to hold the ID of the FAQ to delete
   const faqsPerPage = 10; // Number of FAQs per page
-  const navigate = useNavigate(); // Get the navigate function from react-router-dom
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
         const response = await getAllFaqs();
         setFaqs(response.data);
-        setLoading(false); // Set loading to false after fetching data
+        setLoading(false);
       } catch (error) {
         toast.error("Failed to fetch FAQs");
-        setLoading(false); // Set loading to false in case of error
+        setLoading(false);
       }
     };
 
@@ -46,44 +49,55 @@ export default function Faqs() {
 
   // Go to next page
   const goToNextPage = () => {
+    if (currentPage < Math.ceil(faqs.length / faqsPerPage)) {
       setCurrentPage(currentPage + 1);
+    }
   };
 
-  // Handle delete FAQ
-  const handleDelete = async (faqId) => {
+  // Show delete confirmation modal
+  const showDeleteConfirm = (faqId) => {
+    setFaqToDelete(faqId);
+    setShowConfirm(true);
+  };
+
+  // Handle the actual deletion of the FAQ
+  const handleDelete = async () => {
+    setShowConfirm(false);
+    if (!faqToDelete) return;
+
     try {
-      await deleteFaq(faqId);
-      setFaqs(faqs.filter((faq) => faq._id !== faqId));
+      setLoading(true);
+      await deleteFaq(faqToDelete);
+      setFaqs(faqs.filter((faq) => faq._id !== faqToDelete));
       toast.success("FAQ deleted successfully");
-      navigate("/admin/faqs")
     } catch (error) {
       console.error("Error deleting FAQ:", error);
       toast.error("Failed to delete FAQ");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <>
       <Header
-        title="Faqs"
+        title="FAQS"
         buttons={[
           {
-            text: "Add Faq",
+            text: "Add FAQ",
             link: "create",
           },
         ]}
       />
       <div className="row">
         <div className="col-10 mt-4 mx-auto">
-          {loading ? ( // Render spinner if loading is true
+          {loading ? (
             <div
-            className="d-flex justify-content-center align-items-center"
-            style={{ height: "80vh" }}
-          >
-            <Spinner animation="border" role="status">
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-          </div>
+              className="d-flex justify-content-center align-items-center"
+              style={{ height: "70vh" }}
+            >
+              <Loading />
+            </div>
           ) : (
             <div className="table-responsive shadow rounded">
               <table className="table table-center bg-white mb-0">
@@ -101,7 +115,11 @@ export default function Faqs() {
                       <th className="p-3 col-1">
                         {indexOfFirstFaq + index + 1}
                       </th>
-                      <td className="p-3 col-6">{faq.question}</td>
+                      <td className="p-3 col-6">
+                        {faq.question.charAt(0).toUpperCase() +
+                          faq.question.slice(1)}
+                      </td>
+
                       <td className="p-3 col-3">
                         <Link
                           to={`${faq._id}`}
@@ -115,7 +133,7 @@ export default function Faqs() {
                       <td className="p-3 col-2">
                         <button
                           className="btn btn-danger"
-                          onClick={() => handleDelete(faq._id)}
+                          onClick={() => showDeleteConfirm(faq._id)}
                         >
                           <MdDelete />
                         </button>
@@ -137,7 +155,6 @@ export default function Faqs() {
                     {"<"}
                   </button>
                 </li>
-                {/* Show only current page, previous page, next page, first page, last page, and an ellipsis (...) between the next page and last page */}
                 {Array.from(
                   { length: Math.ceil(faqs.length / faqsPerPage) },
                   (_, i) => i + 1
@@ -192,6 +209,20 @@ export default function Faqs() {
           )}
         </div>
       </div>
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Deletion</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure you want to delete this FAQ?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleDelete}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }

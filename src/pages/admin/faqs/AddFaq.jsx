@@ -17,11 +17,11 @@ export default function AddFaq() {
     try {
       const response = await addFaq(data);
       if (response.message === "Faq created") {
-        navigate("/admin/faqs");
         toast.success("Faq added successfully");
-        reset();
-      } else {
-        toast.error("Failed to add Faq");
+        navigate("/admin/faqs");
+      } else if (response.response.status === 409) {
+        toast.error(response.response.data.message);
+        navigate("/admin/faqs");
       }
     } catch (error) {
       toast.error("Failed to add Faq");
@@ -31,7 +31,7 @@ export default function AddFaq() {
   return (
     <>
       <Header
-        title="Create Faq"
+        title="Create FAQ"
         breadcrumbs={[
           {
             text: "Faqs",
@@ -46,7 +46,9 @@ export default function AddFaq() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Faq Question :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      FAQ <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="question"
                       id="question"
@@ -54,19 +56,21 @@ export default function AddFaq() {
                       className={`form-control ${
                         errors.question ? "is-invalid" : ""
                       }`}
-                      placeholder="Faq Question"
+                      placeholder="FAQ"
                       {...register("question", { required: true })}
                     />
                     {errors.question && (
                       <span className="invalid-feedback">
-                        Question is required
+                        FAQ is required
                       </span>
                     )}
                   </div>
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Answer :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Answer <span className="text-danger">*</span>
+                    </label>
                     <textarea
                       name="answer"
                       id="answer"

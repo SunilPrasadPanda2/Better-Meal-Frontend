@@ -1,19 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import logoDark from "../../assets/images/logo-dark.png";
-import logoLight from "../../assets/images/logo-light.png";
+import logoImg from "../../assets/images/logo/bettermeal.jpg";
 import { useNavigate } from "react-router-dom";
-
-import {
-  GrDashboard,
-  CiLogout,
-  GiMeal,
-  MdOutlineQuestionMark,
-  FaTags,
-  VscRemoteExplorer,
-  FaQuora,
-  RiSurveyLine 
-} from "../../assets/icons/vander";
+import dashboard from "../../assets/images/icons/dashboard.jpg";
+import meals from "../../assets/images/icons/meals.jpg";
+import mealPreference from "../../assets/images/icons/meal_preference.jpg";
+import tags from "../../assets/images/icons/tags.jpg";
+import faqs from "../../assets/images/icons/faqs.jpg";
+import explore from "../../assets/images/icons/explore.jpg";
+import gut from "../../assets/images/icons/gut.jpg";
+import { CiLogout } from "../../assets/icons/vander";
 
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
@@ -61,88 +57,127 @@ export default function Sidebar({ manuClass }) {
       >
         <div className="sidebar-brand">
           <Link to="/index">
-            {/* <img
-              src={logoDark}
-              height="33"
-              className="logo-light-mode"
-              alt=""
-            /> */}
-            {/* <img
-              src={logoLight}
-              height="33"
-              className="logo-dark-mode"
-              alt=""
-            /> */}
-            {/* <span className="sidebar-colored">
-              <img src={logoLight} height="33" alt="" />
-            </span> */}
-            <h4 className="ms-5 my-auto fw-bold">Better-Meal</h4>
+            <div className="d-flex align-items-center justify-content-center">
+              <img src={logoImg} height="50" className="mb-2" alt="logo" />
+              <h4
+                className=" ms-1 mb-2"
+                style={{ color: "#3498db", textTransform: "none" }}
+              >
+                BetterMeal
+              </h4>
+            </div>
           </Link>
         </div>
 
         <ul className="sidebar-menu">
-          <li className={`${manu === "dashboard" || "" ? "active" : ""} ms-0`}>
+          <li
+            className={`${manu === "dashboard" || "" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/dashboard">
-              <GrDashboard
+              <img
+                src={dashboard}
+                style={{ width: "50px", height: "50px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Dashboard
             </Link>
           </li>
 
-          <li className={`${manu === "meals" ? "active" : ""} ms-0`}>
+          <li className={`${manu === "meals" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <Link to="/admin/meals">
-              <GiMeal
+              <img
+                src={meals}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Meals
             </Link>
           </li>
           <li
             className={`${manu === "mealsPrefQuestions" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
           >
             <Link to="/admin/mealsPrefQuestions">
-              <MdOutlineQuestionMark
+              <img
+                src={mealPreference}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Meal Prefernce Questions
             </Link>
           </li>
-          <li className={`${manu === "tags" ? "active" : ""} ms-0`}>
+          <li className={`${manu === "tags" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <Link to="/admin/tags">
-              <FaTags
+              <img
+                src={tags}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Tags
             </Link>
           </li>
-          <li className={`${manu === "faqs" ? "active" : ""} ms-0`}>
+          <li className={`${manu === "faqs" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <Link to="/admin/faqs">
-              <FaQuora  
+              <img
+                src={faqs}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
-              Faqs
+              FAQS
             </Link>
           </li>
-          <li className={`${manu === "explore" ? "active" : ""} ms-0`}>
+          <li className={`${manu === "explore" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <Link to="/admin/explores">
-              <VscRemoteExplorer 
+              <img
+                src={explore}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Explore
             </Link>
           </li>
-          <li className={`${manu === "gutSurvQuestions" ? "active" : ""} ms-0`}>
+          <li className={`${manu === "gutSurvQuestions" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
             <Link to="/admin/gutSurvQuestions">
-              <RiSurveyLine  
+              <img
+                src={gut}
+                style={{ width: "45px", height: "45px" }}
                 className="me-2 d-inline-block mb-0 icon"
-                style={{ width: "40px", height: "40px" }}
+                alt=""
               />
               Gut Survey Questions
             </Link>

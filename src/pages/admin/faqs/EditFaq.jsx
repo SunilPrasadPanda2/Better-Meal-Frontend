@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 export default function EditFaq() {
   const { _id } = useParams(); // Assuming you're using react-router to get the FAQ id from the URL
@@ -48,20 +49,18 @@ export default function EditFaq() {
   if (loading) {
     return (
       <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
 
   return (
     <>
       <Header
-        title="Edit Faq"
+        title="Edit FAQ"
         breadcrumbs={[
           {
             text: "Faqs",
@@ -80,7 +79,9 @@ export default function EditFaq() {
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Faq Question :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Faq Question <span className="text-danger">*</span>
+                    </label>
                     <input
                       {...register("question")}
                       id="question"
@@ -92,7 +93,9 @@ export default function EditFaq() {
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Answer :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Answer <span className="text-danger">*</span>
+                    </label>
                     <textarea
                       {...register("answer")}
                       id="answer"
@@ -103,7 +106,11 @@ export default function EditFaq() {
                   </div>
                 </div>
               </div>
-              <button type="submit" className="btn btn-success float-end" disabled={updating}>
+              <button
+                type="submit"
+                className="btn btn-success float-end"
+                disabled={updating}
+              >
                 {updating ? (
                   <>
                     <Spinner animation="border" size="sm" role="status" />

@@ -27,7 +27,6 @@ api.interceptors.response.use(
     // console.log(error.response.data.err.message);
     if (
       error.response.status === 401 &&
-      !originalRequest._retry &&
       error.response.data.err.message === "jwt expired"
     ) {
       originalRequest._retry = true; // Marking that we already retried the request

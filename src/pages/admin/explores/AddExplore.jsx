@@ -26,9 +26,11 @@ export default function AddExplore() {
     formData.append("date", data.date);
     try {
       const response = await addExplores(formData);
-      if (response) {
-        console.log(response);
-        toast.success(response.message);
+      if (response.data) {
+        toast.success("Explore created successfully");
+        navigate("/admin/explores");
+      }else if(response.response.status===409){
+        toast.error("This explore is already exist");
         navigate("/admin/explores");
       }
     } catch (error) {
@@ -73,7 +75,7 @@ export default function AddExplore() {
                     />
                   </div>
                   <div className="col-lg-5 col-md-8 text-center text-md-start mt-4 mt-sm-0">
-                    <label className="form-label">Explore Image</label>
+                    <label className="form-label">Explore Image <span className="text-danger">*</span></label>
                     <input
                       type="file"
                       name="image"
@@ -94,7 +96,7 @@ export default function AddExplore() {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Name :</label>
+                    <label className="form-label">Name <span className="text-danger">*</span></label>
                     <input
                       name="name"
                       id="name"
@@ -112,7 +114,7 @@ export default function AddExplore() {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Advice :</label>
+                    <label className="form-label">Advice <span className="text-danger">*</span></label>
                     <input
                       name="advice"
                       id="advice"
@@ -132,7 +134,7 @@ export default function AddExplore() {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Tags :</label>
+                    <label className="form-label">Tags <span className="text-danger">*</span></label>
                     <input
                       name="tags"
                       id="tags"
@@ -152,7 +154,7 @@ export default function AddExplore() {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Date :</label>
+                    <label className="form-label">Date <span className="text-danger">*</span></label>
                     <input
                       name="date"
                       id="date"
@@ -169,7 +171,7 @@ export default function AddExplore() {
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Description :</label>
+                    <label className="form-label">Description <span className="text-danger">*</span></label>
                     <textarea
                       name="description"
                       id="description"

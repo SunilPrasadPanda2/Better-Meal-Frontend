@@ -2,56 +2,52 @@ import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import dalma from "@/assets/images/meals/dalma.jpeg";
 import Header from "@/components/common/Header";
-import { getMeal, editMeal } from "@/api/admin";
+import { getExplore, editExplore } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 import Loading from "@/pages/common/loading";
 
-export default function EditMeal() {
+export default function EditExplore() {
   const navigate = useNavigate();
   const { _id } = useParams();
-  const [mealData, setMealData] = useState(null);
+  const [exploreData, setExploreData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
-    mealName: "",
-    calories: "",
-    nutrientsInfo: "",
-    mealTiming: "",
+    name: "",
+    advice: "",
     tags: "",
+    date: "",
     description: "",
     image: null,
-    quantity: "",
     _id: _id,
   });
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
-    const fetchMealData = async () => {
+    const fetchExploreData = async () => {
       try {
-        const data = await getMeal(_id);
+        const data = await getExplore(_id);
         if (data && data.data) {
-          setMealData(data.data);
+          setExploreData(data.data);
           setFormData({
-            mealName: data.data.mealName,
-            calories: data.data.calories,
-            nutrientsInfo: data.data.nutrientsInfo,
-            mealTiming: data.data.mealTiming.join(", "),
+            name: data.data.name,
+            advice: data.data.advice,
             tags: data.data.tags.map((tag) => tag.tagName).join(", "),
             description: data.data.description,
             image: data.data.image,
-            quantity: data.data.quantity,
+            date: new Date(data.data.date).toISOString().split("T")[0],
             _id: _id,
           });
         }
       } catch (error) {
-        console.error("Error fetching meal data:", error);
+        console.error("Error fetching explore data:", error);
+        toast.error("Failed to fetch explore data");
       } finally {
         setLoading(false);
       }
     };
 
     if (_id) {
-      fetchMealData();
+      fetchExploreData();
     }
   }, [_id]);
 
@@ -74,36 +70,25 @@ export default function EditMeal() {
     e.preventDefault();
     setSubmitting(true);
     const data = new FormData();
-    data.append("mealName", formData.mealName);
-    data.append("calories", formData.calories);
-    data.append("nutrientsInfo", formData.nutrientsInfo);
+    data.append("name", formData.name);
+    data.append("advice", formData.advice);
     data.append("description", formData.description);
     if (formData.image && formData.image instanceof File) {
       data.append("image", formData.image);
     }
     data.append("_id", formData._id);
-    data.append("quantity", formData.quantity);
+    data.append("date", formData.date);
 
-    const mealTiming = formData.mealTiming
-      .split(", ")
-      .map((time) => time.trim())
-      .join(", ");
-    data.append("mealTiming", mealTiming);
+    const tags = formData.tags.split(",").map((tagName) => tagName.trim());
+    data.append("tags", JSON.stringify(tags));
 
-    const tags = formData.tags
-      .split(", ")
-      .map((tagName) => tagName.trim())
-      .join(", ");
-    data.append("tags", tags);
-
-    console.log("data",data);
     try {
-      await editMeal(data);
-      toast.success("Meal Updated Successfully");
-      navigate(`/admin/meals/${_id}`);
+      await editExplore(data);
+      toast.success("Explore Updated Successfully");
+      navigate(`/admin/explores/${_id}`);
     } catch (error) {
-      console.error("Error updating meal data:", error);
-      toast.error("Failed to update meal");
+      console.error("Error updating explore data:", error);
+      toast.error("Failed to update explore");
     } finally {
       setSubmitting(false);
     }
@@ -120,22 +105,22 @@ export default function EditMeal() {
     );
   }
 
-  if (!mealData) {
-    return <div>Error loading meal data.</div>;
+  if (!exploreData) {
+    return <div>Error loading explore data.</div>;
   }
 
   return (
     <>
       <Header
-        title="Edit Meal"
+        title="Edit Explore"
         breadcrumbs={[
           {
-            text: "Meals",
-            link: `/admin/meals`,
+            text: "Explores",
+            link: `/admin/explores`,
           },
           {
-            text: "Meals Detail",
-            link: `/admin/meals/${_id}`,
+            text: "Explores Detail",
+            link: `/admin/explores/${_id}`,
           },
         ]}
       />
@@ -153,12 +138,12 @@ export default function EditMeal() {
                           : formData.image || dalma
                       }
                       className="avatar avatar-md-md rounded-pill shadow mx-auto d-block"
-                      alt={formData.mealName}
+                      alt={formData.name}
                     />
                   </div>
                   <div className="col-lg-5 col-md-8 text-center text-md-start mt-4 mt-sm-0">
                     <label className="form-label">
-                      Meal Image <span className="text-danger">*</span>
+                      Explore Image <span className="text-danger">*</span>
                     </label>
                     <input
                       type="file"
@@ -171,71 +156,37 @@ export default function EditMeal() {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Meal Name <span className="text-danger">*</span>
+                      Name <span className="text-danger">*</span>
                     </label>
                     <input
-                      name="mealName"
-                      id="mealName"
+                      name="name"
+                      id="name"
                       type="text"
                       className="form-control"
-                      placeholder="Enter Meal Name"
-                      value={formData.mealName}
+                      placeholder="Explore Name"
+                      value={formData.name}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
-
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Calories <span className="text-danger">*</span>
+                      Advice <span className="text-danger">*</span>
                     </label>
                     <input
-                      name="calories"
-                      id="calories"
+                      name="advice"
+                      id="advice"
                       type="text"
                       className="form-control"
-                      placeholder="Ex: 000k"
-                      value={formData.calories}
+                      placeholder="Advice"
+                      value={formData.advice}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
-
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Nutrients <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="nutrientsInfo"
-                      id="nutrientsInfo"
-                      type="text"
-                      className="form-control"
-                      placeholder="Ex: Nutrient1:00g, Nutrient2:00g"
-                      value={formData.nutrientsInfo}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Meal Times <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="mealTiming"
-                      id="mealTiming"
-                      type="text"
-                      className="form-control"
-                      placeholder="Ex: Breakfast, Lunch"
-                      value={formData.mealTiming}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
@@ -246,25 +197,26 @@ export default function EditMeal() {
                       id="tags"
                       type="text"
                       className="form-control"
-                      placeholder="Ex: Low Sugar, High Protein"
+                      placeholder="Low Sugar,High Protein"
                       value={formData.tags}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Quantity <span className="text-danger">*</span>
+                      Date <span className="text-danger">*</span>
                     </label>
                     <input
-                      name="quantity"
-                      id="quantity"
-                      type="text"
+                      name="date"
+                      id="date"
+                      type="date"
                       className="form-control"
-                      placeholder="Ex: Bowl: 200g"
-                      value={formData.quantity}
+                      value={formData.date}
                       onChange={handleChange}
+                      required
                     />
                   </div>
                 </div>
@@ -281,6 +233,7 @@ export default function EditMeal() {
                       placeholder="Description"
                       value={formData.description}
                       onChange={handleChange}
+                      required
                     ></textarea>
                   </div>
                 </div>
@@ -290,7 +243,7 @@ export default function EditMeal() {
                 type="submit"
                 disabled={submitting}
               >
-                {submitting ? "Updating Meal..." : "Update Meal"}
+                {submitting ? "Updating Explore..." : "Update Explore"}
               </button>
               {submitting && (
                 <div className="text-center mt-3">

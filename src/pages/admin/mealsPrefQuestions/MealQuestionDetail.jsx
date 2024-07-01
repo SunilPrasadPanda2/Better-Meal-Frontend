@@ -1,15 +1,36 @@
 import React, { useEffect, useState } from "react";
 import Header from "@/components/common/Header";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { getMealQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap"; // assuming you have react-bootstrap installed
-
+import Loading from "@/pages/common/loading";
+import { MdAdd } from "react-icons/md";
+import { FaEye } from "react-icons/fa";
 export default function MealQuestionDetail() {
   const { _id } = useParams();
   const [mealQuestion, setMealQuestion] = useState(null);
   const [loading, setLoading] = useState(true); // add loading state
+  const navigate = useNavigate();
 
+  const handleAddClick = (option) => {
+    navigate(`/admin/addSubQuestion`, {
+      state: {
+        questionLinkedTo: mealQuestion.question,
+        questionId: mealQuestion._id,
+        connectedOption: option,
+      },
+    });
+  };
+  const handleEyeClick = (option, _id) => {
+    navigate(`/admin/subQuestionDetail/${mealQuestion._id}`, {
+      state: {
+        questionLinkedTo: mealQuestion.question,
+        questionId: mealQuestion._id,
+        connectedOption: option,
+        optionId: _id,
+      },
+    });
+  };
   useEffect(() => {
     const fetchMealQuestion = async () => {
       try {
@@ -29,13 +50,11 @@ export default function MealQuestionDetail() {
   if (loading) {
     return (
       <div
-      className="d-flex justify-content-center align-items-center"
-      style={{ height: "80vh" }}
-    >
-      <Spinner animation="border" role="status">
-        <span className="sr-only">Loading...</span>
-      </Spinner>
-    </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
 
@@ -65,7 +84,10 @@ export default function MealQuestionDetail() {
         <div className="avatar-profile d-flex margin-negative mt-n5 position-relative ps-3 pt-2">
           <div className="mt-4 ms-3 pt-3">
             <h6 className="mb-0 me-2">Question :</h6>
-            <p className="mt-3 mb-1 ms-4">{mealQuestion.question}</p>
+            <p className="mt-3 mb-1 ms-4">
+              {mealQuestion.question.charAt(0).toUpperCase() +
+                mealQuestion.question.slice(1)}
+            </p>
           </div>
         </div>
 
@@ -80,15 +102,29 @@ export default function MealQuestionDetail() {
                         <h6 className="mb-0 me-2">Options :</h6>
                         <div className="ms-4">
                           {mealQuestion.options.map((option, index) => (
-                            <div key={option._id} className="mb-2">
-                              <p className="text-muted mb-1">
+                            <div
+                              key={option._id}
+                              className="mb-3 d-flex align-items-center"
+                            >
+                              <p className="text-muted mb-0 me-auto">
                                 {index + 1}. {option.option}
                               </p>
-                              {option.mealIds.length > 0 && (
-                                <p className="text-muted mb-0 text-nowrap ms-3">
-                                  Meal IDs: {option.mealIds.join(", ")}
-                                </p>
-                              )}
+                              <div className="ms-auto">
+                                <button
+                                  className="btn btn-primary me-2"
+                                  onClick={() => handleAddClick(option.option)} // Pass the specific option value
+                                >
+                                  <MdAdd className="fs-5" />
+                                </button>
+                                <button
+                                  className="btn btn-primary me-2"
+                                  onClick={() =>
+                                    handleEyeClick(option.option, option._id)
+                                  }
+                                >
+                                  <FaEye className="fs-5" />
+                                </button>
+                              </div>
                             </div>
                           ))}
                         </div>

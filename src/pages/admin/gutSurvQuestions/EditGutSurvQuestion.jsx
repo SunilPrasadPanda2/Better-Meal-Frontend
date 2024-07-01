@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import { useNavigate, useParams } from "react-router-dom";
 import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 export default function EditGutSurvQuestion() {
   const { _id } = useParams();
@@ -71,20 +72,18 @@ export default function EditGutSurvQuestion() {
           <div className="card border-0 p-4 rounded shadow ">
             {loading ? ( // Show spinner if loading
               <div
-              className="d-flex justify-content-center align-items-center"
-              style={{ height: "80vh" }}
-            >
-              <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
-              </Spinner>
-            </div>
+                className="d-flex justify-content-center align-items-center"
+                style={{ height: "70vh" }}
+              >
+                <Loading />
+              </div>
             ) : (
               <form onSubmit={handleSubmit(onSubmit)}>
                 <div className="row">
                   <div className="col-md-12">
                     <div className="mb-4">
                       <label className="form-label">
-                        Gut Survey Question :
+                        Gut Survey Question{" "}
                         <span className="text-danger">*</span>
                       </label>
                       <input
@@ -98,8 +97,7 @@ export default function EditGutSurvQuestion() {
                   <div className="col-md-12">
                     <div className="mb-3">
                       <label htmlFor="gender" className="form-label">
-                        Gender :
-                        <span className="text-danger">*</span>
+                        Gender <span className="text-danger">*</span>
                       </label>
                       <select
                         {...register("gender")}

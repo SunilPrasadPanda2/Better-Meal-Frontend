@@ -3,7 +3,7 @@ import Header from "@/components/common/Header";
 import { useParams } from "react-router-dom";
 import { getFaq } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import Loading from "@/pages/common/loading";
 
 export default function FaqDetail() {
   const { _id } = useParams();
@@ -28,29 +28,27 @@ export default function FaqDetail() {
   if (loading) {
     return (
       <div
-          className="d-flex justify-content-center align-items-center"
-          style={{ height: "80vh" }}
-        >
-          <Spinner animation="border" role="status">
-            <span className="sr-only">Loading...</span>
-          </Spinner>
-        </div>
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
     );
   }
 
   return (
     <>
       <Header
-        title="Faqs Detail"
+        title="FAQ Detail"
         breadcrumbs={[
           {
-            text: "Faqs",
+            text: "FAQ",
             link: "/admin/faqs",
           },
         ]}
         buttons={[
           {
-            text: "Edit Faq",
+            text: "Edit FAQ",
             link: `/admin/Faqs/edit/${_id}`,
           },
         ]}
@@ -60,7 +58,9 @@ export default function FaqDetail() {
         <div className="avatar-profile d-flex margin-negative mt-n5 position-relative ps-3 pt-2">
           <div className="mt-4 ms-3 pt-3">
             <h6 className="mb-0 me-2">Question :</h6>
-            <p className="mt-3 mb-1 ms-4">{faq.question}</p>
+            <p className="mt-3 mb-1 ms-4">
+              {faq.question.charAt(0).toUpperCase() + faq.question.slice(1)}
+            </p>
           </div>
         </div>
         <div className="row">
@@ -73,7 +73,10 @@ export default function FaqDetail() {
                       <div className="mb-3">
                         <h6 className="mb-0 me-2">Answer :</h6>
                         <div className="ms-4">
-                          <p className="text-muted mb-0">{faq.answer}</p>
+                          <p className="text-muted mb-0">
+                            {faq.answer.charAt(0).toUpperCase() +
+                              faq.answer.slice(1)}
+                          </p>
                         </div>
                       </div>
                     </div>

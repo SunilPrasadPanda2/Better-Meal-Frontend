@@ -1,19 +1,27 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import Header from "@/components/common/Header";
-import { useForm, useFieldArray } from "react-hook-form";
-import { useNavigate } from "react-router-dom";
-import { addMealQuestion } from "@/api/admin";
+import { getSubQuestion, editSubQuestion } from "@/api/admin";
 import { toast } from "react-toastify";
+import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlus, FaMinus } from "react-icons/fa";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Spinner } from "react-bootstrap";
+import Loading from "@/pages/common/loading";
 
-export default function AddMealQuestion() {
+export default function EditSubQuestion() {
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState(false); // State for loading
+  const location = useLocation();
+  const { questionId, optionId } = location.state || {};
+
+  const { _id } = useParams();
+  const [loading, setLoading] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
+
   const {
     register,
-    handleSubmit,
     control,
+    handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -27,46 +35,96 @@ export default function AddMealQuestion() {
     name: "options",
   });
 
-  const onSubmit = async (data) => {
-    setIsLoading(true); // Start loading
-    try {
-      const result = await addMealQuestion(data);
-      if (result.data) {
-        toast.success("Question added successfully");
-        navigate("/admin/mealsPrefQuestions");
-      } else if (result.response.status === 409) {
-        toast.error(result.response.data.message);
-        navigate("/admin/mealsPrefQuestions");
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const response = await getSubQuestion(_id);
+        const data = response.data[0]; // Ensure you are accessing the first element of the data array
+        if (data) {
+          reset({
+            question: data.question,
+            options: data.options.map((option) => ({ option: option.option })),
+          });
+        }
+        setLoading(false);
+      } catch (error) {
+        console.error("Failed to fetch question data:", error);
+        toast.error("Failed to fetch question data");
+        setLoading(false);
       }
+    };
+
+    fetchData();
+  }, [_id, reset]);
+
+  const onSubmit = async (formData) => {
+    try {
+      setSubmitting(true);
+      const updateData = {
+        ...formData,
+        _id,
+        options: formData.options.map((option) => ({
+          option: option.option,
+        })),
+      };
+
+      console.log("Update Data: ", updateData); // Log the payload
+
+      await editSubQuestion(updateData);
+      toast.success("Sub question updated successfully");
+      navigate(`/admin/subQuestionDetail/${questionId}`, {
+        state: {
+          questionId: questionId,
+          optionId: optionId,
+        },
+      });
     } catch (error) {
-      console.error("Error adding question:", error);
-      toast.error("Failed to add meal questions");
+      console.error(
+        "Error updating meal question:",
+        error.response ? error.response.data : error
+      );
+      toast.error("Failed to update meal question");
     } finally {
-      setIsLoading(false); // Stop loading
+      setSubmitting(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div
+        className="d-flex justify-content-center align-items-center"
+        style={{ height: "70vh" }}
+      >
+        <Loading />
+      </div>
+    );
+  }
 
   return (
     <>
       <Header
-        title="Add Meal Question"
+        title="Edit Sub Question"
         breadcrumbs={[
           {
             text: "Questions",
-            link: "/admin/mealsPrefQuestions",
+            link: `/admin/mealsPrefQuestions`,
+          },
+          {
+            text: "Question Detail",
+            link: `/admin/mealsPrefQuestions/${questionId}`,
           },
         ]}
       />
       <div className="row d-flex justify-content-center">
-        <div className="col-lg-9 mt-4 ">
-          <div className="card border-0 p-4 rounded shadow ">
+        <div className="col-lg-9 mt-4">
+          <div className="card border-0 p-4 rounded shadow">
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="row">
                 <div className="col-md-12">
                   <div className="mb-3">
                     <label className="form-label">
-                      Meal Preference Question{" "}
-                      <span className="text-danger">*</span>
+                      Question :<span className="text-danger">*</span>
                     </label>
                     <input
                       name="question"
@@ -75,9 +133,8 @@ export default function AddMealQuestion() {
                       className={`form-control ${
                         errors.question ? "is-invalid" : ""
                       }`}
-                      placeholder="Enter Question"
+                      placeholder="Question"
                       {...register("question", { required: true })}
-                      disabled={isLoading} // Disable input when loading
                     />
                     {errors.question && (
                       <span className="invalid-feedback">
@@ -88,7 +145,7 @@ export default function AddMealQuestion() {
                   {fields.map((field, index) => (
                     <div key={field.id} className="mb-3">
                       <label className="form-label">
-                        Option {index + 1}{" "}
+                        Option {index + 1} :
                         <span className="text-danger">*</span>
                       </label>
                       <div className="d-flex">
@@ -99,17 +156,15 @@ export default function AddMealQuestion() {
                           className={`form-control ${
                             errors.options?.[index]?.option ? "is-invalid" : ""
                           }`}
-                          placeholder="Enter Option"
+                          placeholder="Option"
                           {...register(`options[${index}].option`, {
                             required: true,
                           })}
-                          disabled={isLoading} // Disable input when loading
                         />
                         <button
                           type="button"
                           className="btn btn-danger ms-2"
                           onClick={() => remove(index)}
-                          disabled={isLoading} // Disable button when loading
                         >
                           <FaMinus />
                         </button>
@@ -123,11 +178,11 @@ export default function AddMealQuestion() {
                   ))}
                   <button
                     type="button"
-                    className="btn btn-secondary mt-2"
+                    className="btn btn-primary mt-2"
                     onClick={() => append({ option: "" })}
-                    disabled={isLoading} // Disable button when loading
                   >
-                    <FaPlus className="me-2" /> Add Option
+                    <FaPlus className="me-2" />
+                    Add Option
                   </button>
                 </div>
               </div>
@@ -135,21 +190,15 @@ export default function AddMealQuestion() {
               <button
                 className="btn btn-success mt-1 float-end"
                 type="submit"
-                disabled={isLoading}
+                disabled={submitting}
               >
-                {isLoading ? (
+                {submitting ? (
                   <>
-                    <Spinner
-                      as="span"
-                      animation="border"
-                      size="sm"
-                      role="status"
-                      aria-hidden="true"
-                    />{" "}
-                    Adding...
+                    <Spinner animation="border" size="sm" role="status" />
+                    <span className="visually-hidden">Updating...</span>
                   </>
                 ) : (
-                  "Add Question"
+                  "Update Question"
                 )}
               </button>
             </form>

@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from "react";
 import Header from "@/components/common/Header";
-import { getMeal, deleteMeal } from "@/api/admin";
+import { getExplore, deleteExplore } from "@/api/admin";
 import { useParams, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { Modal, Button } from "react-bootstrap"; // Assuming you have react-bootstrap installed
+import { Modal, Button } from "react-bootstrap";
 import { MdAutoDelete } from "react-icons/md";
 import Loading from "@/pages/common/loading";
 
-const MealDetail = () => {
+export default function ExploreDetail() {
   const { _id } = useParams();
   const navigate = useNavigate();
-  const [meal, setMeal] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // State for loading
+  const [isLoading, setIsLoading] = useState(true);
+  const [explore, setExplore] = useState(null);
+  const [selectedExploreId, setSelectedExploreId] = useState(null);
   const [showConfirm, setShowConfirm] = useState(false);
-  const [selectedMealId, setSelectedMealId] = useState(null);
 
   useEffect(() => {
-    const fetchMeal = async () => {
+    const fetchExplore = async () => {
       try {
-        const response = await getMeal(_id);
-        setMeal(response.data); // Set meal directly from response data
+        const data = await getExplore(_id);
+        setExplore(data.data);
+        setIsLoading(false);
       } catch (error) {
-        console.error("Error fetching meal data:", error);
-        toast.error("Failed to fetch meal");
-      } finally {
-        setIsLoading(false); // Stop loading
+        console.error("Error fetching explore data:", error);
+        toast.error("Failed to fetch explore data");
+        setIsLoading(false);
       }
     };
-    fetchMeal();
+
+    fetchExplore();
   }, [_id]);
 
   if (isLoading) {
@@ -41,23 +42,11 @@ const MealDetail = () => {
     );
   }
 
-  if (!meal) {
-    return <div>No meal data available.</div>;
+  if (!explore) {
+    return <div>Error loading explore data</div>;
   }
-
-  const {
-    mealName,
-    calories,
-    description,
-    nutrientsInfo,
-    mealTiming,
-    tags,
-    image,
-    quantity,
-  } = meal;
-
-  const handleDeleteClick = (mealId) => {
-    setSelectedMealId(mealId);
+  const handleDeleteClick = (exploreId) => {
+    setSelectedExploreId(exploreId);
     setShowConfirm(true);
   };
 
@@ -65,45 +54,30 @@ const MealDetail = () => {
     setShowConfirm(false);
     try {
       setIsLoading(true);
-      await deleteMeal({ _id }); // Call deleteMeal function with the meal ID
-      navigate("/admin/meals");
-      toast.success("Meal deleted successfully");
+      await deleteExplore({ _id }); // Call deleteMeal function with the explore ID
+      navigate("/admin/explores");
+      toast.success("Explore deleted successfully");
     } catch (error) {
-      console.error("Error deleting meal:", error);
-      toast.error("Failed to delete meal");
+      console.error("Error deleting explore:", error);
+      toast.error("Failed to delete explore");
     } finally {
       setIsLoading(false);
     }
   };
-
-  const safeMealTiming = mealTiming
-    ? mealTiming
-        .map((time) => time.charAt(0).toUpperCase() + time.slice(1))
-        .join(", ")
-    : "";
-
-  const safeTags = tags
-    ? tags
-        .map(
-          (tag) => tag.tagName.charAt(0).toUpperCase() + tag.tagName.slice(1)
-        )
-        .join(", ")
-    : "";
-
   return (
     <>
       <Header
-        title={mealName}
+        title={explore.name}
         breadcrumbs={[
           {
-            text: "Meals",
-            link: "/admin/meals",
+            text: "Explores",
+            link: "/admin/explores",
           },
         ]}
         buttons={[
           {
-            text: "Edit Meal",
-            link: `/admin/meals/edit/${_id}`,
+            text: "Edit Explore",
+            link: `/admin/explores/edit/${_id}`,
           },
         ]}
       />
@@ -111,13 +85,13 @@ const MealDetail = () => {
         <div className="p-2 bg-primary bg-gradient"></div>
         <div className="avatar-profile d-flex margin-negative mt-n5 position-relative ps-3 pt-2">
           <img
-            src={image}
+            src={explore.image}
             className="rounded-circle shadow-md avatar avatar-medium"
-            alt={mealName}
+            alt={explore.name}
           />
           <div className="mt-4 ms-3 pt-3">
             <h5 className="mt-3 mb-1">
-              {mealName.charAt(0).toUpperCase() + mealName.slice(1)}
+              {explore.name.charAt(0).toUpperCase() + explore.name.slice(1)}
             </h5>
           </div>
           <button
@@ -128,7 +102,6 @@ const MealDetail = () => {
             <MdAutoDelete className="fs-4" />
           </button>
         </div>
-
         <div className="row">
           <div className="col-12 mt-1">
             <div className="card border-0 rounded-0 p-4">
@@ -137,43 +110,36 @@ const MealDetail = () => {
                   <div className="row">
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Calories: </h6>
-                        <p className="text-muted mb-0">{calories}</p>
+                        <h6 className="mb-0 me-2">Advice: </h6>
+                        <p className="text-muted mb-0">
+                          {explore.advice &&
+                            explore.advice.charAt(0).toUpperCase() +
+                              explore.advice.slice(1)}
+                        </p>
                       </div>
                     </div>
 
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Nutrients: </h6>
-                        <p className="text-muted mb-0">{nutrientsInfo}</p>
+                        <h6 className="mb-0 me-2">Date: </h6>
+                        <p className="text-muted mb-0">
+                          {new Date(explore.date).toLocaleDateString()}
+                        </p>
                       </div>
                     </div>
 
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex ">
-                        <h6 className="mb-0 me-2">Timings:</h6>
-                        <p className="text-muted mb-0">{safeMealTiming}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
+                    <div className="col-md-12">
                       <div className="mb-3 d-flex">
                         <h6 className="mb-0 me-2">Tags: </h6>
-                        <p className="text-muted mb-0">{safeTags}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Quantity: </h6>
-                        <p className="text-muted mb-0">{quantity}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Ratings: </h6>
-                        <p className="text-muted mb-0">5 Star</p>
+                        <p className="text-muted mb-0">
+                          {explore.tags
+                            .map(
+                              (tag) =>
+                                tag.tagName.charAt(0).toUpperCase() +
+                                tag.tagName.slice(1)
+                            )
+                            .join(", ")}
+                        </p>
                       </div>
                     </div>
 
@@ -181,9 +147,9 @@ const MealDetail = () => {
                       <div className="mb-3 d-flex ">
                         <h6 className="mb-0 me-2">Description: </h6>
                         <p className="text-muted mb-0">
-                          {description &&
-                            description.charAt(0).toUpperCase() +
-                              description.slice(1)}
+                          {explore.description &&
+                            explore.description.charAt(0).toUpperCase() +
+                              explore.description.slice(1)}
                         </p>
                       </div>
                     </div>
@@ -198,7 +164,7 @@ const MealDetail = () => {
         <Modal.Header closeButton>
           <Modal.Title>Confirm Deletion</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Are you sure you want to delete this meal?</Modal.Body>
+        <Modal.Body>Are you sure you want to delete this explore?</Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={() => setShowConfirm(false)}>
             No
@@ -210,6 +176,4 @@ const MealDetail = () => {
       </Modal>
     </>
   );
-};
-
-export default MealDetail;
+}

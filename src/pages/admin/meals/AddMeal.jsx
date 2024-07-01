@@ -20,20 +20,38 @@ const AddMeal = () => {
 
   const onSubmit = async (data) => {
     setLoading(true);
+
+    // Split the mealTiming string into an array, trim whitespace, convert the first letter to lowercase, and join back into a string
+    const mealTimingsArray = data.mealTiming
+      .split(",")
+      .map((timing) => {
+        const trimmedTiming = timing.trim();
+        if (trimmedTiming.length > 0) {
+          return trimmedTiming.charAt(0).toLowerCase() + trimmedTiming.slice(1);
+        }
+        return "";
+      })
+      .filter(Boolean); // filter out any empty strings
+
+    // Join the array back into a single string with commas
+    const mealTimings = mealTimingsArray.join(", ");
+
     const formData = new FormData();
     formData.append("image", data.image[0]);
     formData.append("mealName", data.mealName);
     formData.append("calories", data.calories);
     formData.append("nutrientsInfo", data.nutrientsInfo);
-    formData.append("mealTiming", data.mealTiming);
+    formData.append("mealTiming", mealTimings);
     formData.append("tags", data.tags);
     formData.append("description", data.description);
     formData.append("quantity", data.quantity);
     try {
       const response = await addMeal(formData);
-      if (response) {
-        console.log(response);
+      if (response.data) {
         toast.success(response.message);
+        navigate("/admin/meals");
+      }else if(response.response.status===409){
+        toast.error(response.response.data.message);
         navigate("/admin/meals");
       }
     } catch (error) {
@@ -80,7 +98,9 @@ const AddMeal = () => {
                     />
                   </div>
                   <div className="col-lg-5 col-md-8 text-center text-md-start mt-4 mt-sm-0">
-                    <label className="form-label">Meal Image :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Meal Image <span className="text-danger">*</span>
+                    </label>
                     <input
                       type="file"
                       name="image"
@@ -100,7 +120,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Meal Name :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Meal Name <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="mealName"
                       id="mealName"
@@ -120,7 +142,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Calories :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Calories <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="calories"
                       id="calories"
@@ -140,7 +164,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Nutrients :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Nutrients <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="nutrientsInfo"
                       id="nutrientsInfo"
@@ -160,7 +186,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Meal Times :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Meal Times <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="mealTiming"
                       id="mealTiming"
@@ -168,7 +196,7 @@ const AddMeal = () => {
                       className={`form-control ${
                         errors.mealTiming ? "is-invalid" : ""
                       }`}
-                      placeholder="Ex: Morning, Afternoon"
+                      placeholder="Ex: Breakfast, Lunch"
                       {...register("mealTiming", { required: true })}
                     />
                     {errors.mealTiming && (
@@ -180,7 +208,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Tags :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Tags <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="tags"
                       id="tags"
@@ -200,7 +230,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-6">
                   <div className="mb-3">
-                    <label className="form-label">Quantity :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Quantity <span className="text-danger">*</span>
+                    </label>
                     <input
                       name="quantity"
                       id="quantity"
@@ -220,7 +252,9 @@ const AddMeal = () => {
                 </div>
                 <div className="col-md-12">
                   <div className="mb-3">
-                    <label className="form-label">Description :<span className="text-danger">*</span></label>
+                    <label className="form-label">
+                      Description <span className="text-danger">*</span>
+                    </label>
                     <textarea
                       name="description"
                       id="description"

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logoDark from "../../assets/images/logo-dark.png";
+import logoImg from "../../assets/images/logo/bettermeal.jpg";
 
 import bg1 from "../../assets/images/bg/bg-lines-one.png";
 
@@ -65,22 +65,22 @@ const Login = () => {
         <div className="container">
           <div className="row justify-content-center">
             <div className="col-lg-8 col-md-6 col-sm-4">
-              {/* <img
-                src={logoDark}
-                height="22"
-                className="mx-auto d-block"
-                alt=""
-              /> */}
               <div
                 className="card login-page shadow mt-4 rounded border-0"
                 style={{ height: "400px" }}
               >
                 <div className="card-body">
-                  <h3 className="text-center">
-                    <span className="text-decoration-underline">
-                      Better-Meal
-                    </span>
-                  </h3>
+                  <div className="d-flex align-items-center justify-content-center">
+                    <img
+                      src={logoImg}
+                      height="50"
+                      className="mx-0 d-block mb-2"
+                      alt=""
+                    />
+                    <h4 className=" ms-1 mb-0" style={{color:"#3498db"}}>
+                      <span>BetterMeal</span>
+                    </h4>
+                  </div>
                   <h4 className="text-center">Sign In</h4>
                   <form
                     className="login-form mt-4"
