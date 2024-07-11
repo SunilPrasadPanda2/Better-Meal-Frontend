@@ -1,15 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import logoImg from "../../assets/images/logo/bettermeal.jpg";
-
 import bg1 from "../../assets/images/bg/bg-lines-one.png";
-
-import {
-  FiHome,
-  AiFillFacebook,
-  SlSocialGoogle,
-} from "../../assets/icons/vander";
-
+import { FiHome } from "react-icons/fi";
 import { useForm } from "react-hook-form";
 import { login } from "../../api/auth";
 import { useDispatch } from "react-redux";
@@ -26,12 +19,13 @@ const Login = () => {
   } = useForm();
 
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleLogin = async (data) => {
     setError("");
+    setLoading(true);
     try {
       const response = await login(data);
-      console.log(response);
       if (response) {
         dispatch(
           setAuth({
@@ -43,13 +37,16 @@ const Login = () => {
             refreshToken: response.refreshToken,
           })
         );
+        navigate("/admin/dashboard");
       }
-      navigate("/admin/dashboard");
     } catch (error) {
-      setError(error);
+      setError(error.message || "Login failed");
       console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
+
   return (
     <>
       <div className="back-to-home rounded d-none d-sm-block">
@@ -77,7 +74,7 @@ const Login = () => {
                       className="mx-0 d-block mb-2"
                       alt=""
                     />
-                    <h4 className=" ms-1 mb-0" style={{color:"#3498db"}}>
+                    <h4 className="ms-1 mb-0" style={{ color: "#3498db" }}>
                       <span>BetterMeal</span>
                     </h4>
                   </div>
@@ -99,11 +96,11 @@ const Login = () => {
                             placeholder="Email"
                             required=""
                             {...register("email", {
-                              required: true,
+                              required: "Email is required",
                               pattern: {
                                 value:
-                                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Regular expression for 10 digits
-                                message: "Please enter a valid email Id",
+                                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                                message: "Please enter a valid email",
                               },
                             })}
                             aria-invalid={errors.email ? "true" : "false"}
@@ -127,11 +124,7 @@ const Login = () => {
                             className="form-control"
                             placeholder="Password"
                             {...register("password", {
-                              required: true,
-                              pattern: {
-                                //value: /^[0-9]{4}$/, // Regular expression for 6-digit OTP
-                                message: "Please enter a valid password",
-                              },
+                              required: "Password is required",
                             })}
                             aria-invalid={errors.password ? "true" : "false"}
                           />
@@ -143,70 +136,27 @@ const Login = () => {
                         </div>
                       </div>
 
-                      {/* <div className="col-lg-12">
-                        <div className="d-flex justify-content-between">
-                          <div className="mb-3">
-                            <div className="form-check">
-                              <input
-                                className="form-check-input align-middle"
-                                type="checkbox"
-                                value=""
-                                id="remember-check"
-                              />
-                              <label
-                                className="form-check-label"
-                                htmlFor="remember-check"
-                              >
-                                Remember me
-                              </label>
-                            </div>
-                          </div>
-                          <Link
-                            to="/forgot-password"
-                            className="text-dark h6 mb-0"
-                          >
-                            Forgot password ?
-                          </Link>
-                        </div>
-                      </div> */}
                       <div className="col-lg-12 mb-0">
                         <div className="d-grid">
-                          <button className="btn btn-primary">Sign in</button>
+                          <button className="btn btn-primary" type="submit" disabled={loading}>
+                            {loading ? (
+                              <>
+                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                <span className="sr-only">Sign in...</span>
+                              </>
+                            ) : (
+                              "Sign in"
+                            )}
+                          </button>
                         </div>
                       </div>
-
-                      {/* <div className="col-lg-12 mt-3 text-center">
-                        <h6 className="text-muted">Or</h6>
-                      </div>
-
-                      <div className="col-6 mt-3">
-                        <div className="d-grid">
-                          <Link to="#" className="btn btn-soft-primary">
-                            <AiFillFacebook /> Facebook
-                          </Link>
-                        </div>
-                      </div>
-
-                      <div className="col-6 mt-3">
-                        <div className="d-grid">
-                          <Link to="#" className="btn btn-soft-primary">
-                            <SlSocialGoogle /> Google
-                          </Link>
-                        </div>
-                      </div> */}
-
-                      {/* <div className="col-12 text-center">
-                        <p className="mb-0 mt-3">
-                          <small className="text-dark me-2">
-                            Don't have an account ?
-                          </small>{" "}
-                          <Link to="/signup" className="text-dark fw-bold">
-                            Sign Up
-                          </Link>
-                        </p>
-                      </div> */}
                     </div>
                   </form>
+                  {error && (
+                    <div className="mt-3">
+                      <p className="text-danger">{error}</p>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>

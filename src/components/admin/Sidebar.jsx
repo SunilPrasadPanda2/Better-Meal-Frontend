@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import logoImg from "../../assets/images/logo/bettermeal.jpg";
-import { useNavigate } from "react-router-dom";
 import dashboard from "../../assets/images/icons/dashboard.jpg";
 import meals from "../../assets/images/icons/meals.jpg";
 import mealPreference from "../../assets/images/icons/meal_preference.jpg";
@@ -20,6 +19,7 @@ import { resetAuth } from "../../store/authSlice";
 export default function Sidebar({ manuClass }) {
   const [manu, setManu] = useState("");
   const [subManu, setSubManu] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export default function Sidebar({ manuClass }) {
 
   const dispatch = useDispatch();
   const handleLogout = async () => {
-    console.warn("logout");
+    setLoading(true);
     try {
       const response = await logout();
       if (response) {
@@ -45,6 +45,8 @@ export default function Sidebar({ manuClass }) {
       }
     } catch (err) {
       console.log("Logout failed. Please try again.", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -89,11 +91,14 @@ export default function Sidebar({ manuClass }) {
             </Link>
           </li>
 
-          <li className={`${manu === "meals" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+          <li
+            className={`${manu === "meals" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.05)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/meals">
               <img
                 src={meals}
@@ -122,11 +127,14 @@ export default function Sidebar({ manuClass }) {
               Meal Prefernce Questions
             </Link>
           </li>
-          <li className={`${manu === "tags" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+          <li
+            className={`${manu === "tags" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.05)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/tags">
               <img
                 src={tags}
@@ -137,11 +145,14 @@ export default function Sidebar({ manuClass }) {
               Tags
             </Link>
           </li>
-          <li className={`${manu === "faqs" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+          <li
+            className={`${manu === "faqs" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.05)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/faqs">
               <img
                 src={faqs}
@@ -152,11 +163,14 @@ export default function Sidebar({ manuClass }) {
               FAQS
             </Link>
           </li>
-          <li className={`${manu === "explore" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+          <li
+            className={`${manu === "explore" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.05)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/explores">
               <img
                 src={explore}
@@ -167,11 +181,14 @@ export default function Sidebar({ manuClass }) {
               Explore
             </Link>
           </li>
-          <li className={`${manu === "gutSurvQuestions" ? "active" : ""} ms-0`} style={{ transition: "transform 0.2s" }}
+          <li
+            className={`${manu === "gutSurvQuestions" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
             onMouseEnter={(e) =>
               (e.currentTarget.style.transform = "scale(1.05)")
             }
-            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}>
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
             <Link to="/admin/gutSurvQuestions">
               <img
                 src={gut}
@@ -190,14 +207,24 @@ export default function Sidebar({ manuClass }) {
             type="button"
             onClick={handleLogout}
             className="dropdown-item text-dark d-flex align-items-center"
+            disabled={loading}
           >
-            <span className="mb-0 d-inline-block fw-bold ms-1 mt-2">
-              <CiLogout
-                className="align-middle h5 mb-0 me-1"
-                style={{ width: "22px", height: "22px" }}
-              />
-              Logout
-            </span>{" "}
+            {loading ? (
+              <>
+                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span className="sr-only">Logout...</span>
+              </>
+            ) : (
+              <>
+                <CiLogout
+                  className="align-middle h5 mb-0 me-1"
+                  style={{ width: "22px", height: "22px" }}
+                />
+                <span className="mb-0 d-inline-block fw-bold ms-1 mt-2">
+                  Logout
+                </span>
+              </>
+            )}
           </button>
         </li>
       </ul>

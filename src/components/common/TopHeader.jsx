@@ -16,10 +16,11 @@ export default function TopHeader({ toggle, setToggle }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const [userModal, setUserModal] = useState(false);
+  const [loading, setLoading] = useState(false);
   const userModalRef = useRef(null);
 
   const handleLogout = async () => {
-    console.warn("logout");
+    setLoading(true);
     try {
       const response = await logout();
       if (response) {
@@ -28,6 +29,8 @@ export default function TopHeader({ toggle, setToggle }) {
       }
     } catch (err) {
       console.log("Logout failed. Please try again.", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -82,11 +85,21 @@ export default function TopHeader({ toggle, setToggle }) {
                   onClick={handleLogout}
                   className="dropdown-item text-dark d-flex align-items-center"
                   style={{ textTransform: "none" }}
+                  disabled={loading}
                 >
-                  <span className="mb-0 d-inline-block me-1 fw-bold h6">
-                    <LuLogOut className="align-middle mb-0 me-1" />
-                    Logout
-                  </span>
+                  {loading ? (
+                    <>
+                      <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                      <span className="sr-only">Loading...</span>
+                    </>
+                  ) : (
+                    <>
+                      <LuLogOut className="align-middle mb-0 me-1" />
+                      <span className="mb-0 d-inline-block me-1 fw-bold h6">
+                        Logout
+                      </span>
+                    </>
+                  )}
                 </button>
               </div>
             </div>
