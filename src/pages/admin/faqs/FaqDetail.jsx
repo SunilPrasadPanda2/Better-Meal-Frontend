@@ -69,10 +69,10 @@ export default function FaqDetail() {
               <div className="tab-content mt-0" id="pills-tabContent">
                 <div className="tab-pane fade show active">
                   <div className="row">
-                    <div className="col-md-6 ms-2">
+                    <div className="col-md-12 ms-2">
                       <div className="mb-3">
                         <h6 className="mb-0 me-2">Answer :</h6>
-                        <div className="ms-4">
+                        <div className="ms-4 me-1">
                           <p className="text-muted mb-0">
                             {faq.answer.charAt(0).toUpperCase() +
                               faq.answer.slice(1)}

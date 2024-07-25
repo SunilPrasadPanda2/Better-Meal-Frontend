@@ -24,6 +24,7 @@ import EditGutSurvQuestion from "@/pages/admin/gutSurvQuestions/EditGutSurvQuest
 import AddSubQuestion from "@/pages/admin/mealsPrefQuestions/SubQuestion/AddSubQuestion";
 import SubQuestionDetail from "@/pages/admin/mealsPrefQuestions/SubQuestion/SubQuestionDetail";
 import EditSubQuestion from "@/pages/admin/mealsPrefQuestions/SubQuestion/EditSubQuestion";
+import Users from "@/pages/admin/users/users";
 
 const adminRoutes = [
   { path: "dashboard", element: <Dashboard /> },
@@ -41,9 +42,9 @@ const adminRoutes = [
   { path: "mealsPrefQuestions/edit/:_id", element: <EditMealQuestion /> },
 
   // meal preference sub-question
-  { path: "addSubQuestion", element: <AddSubQuestion/> },
-  { path: "subQuestionDetail/:_id", element: <SubQuestionDetail/> },
-  { path: "subQuestionDetail/edit/:_id", element: <EditSubQuestion/> },
+  { path: "addSubQuestion", element: <AddSubQuestion /> },
+  { path: "subQuestionDetail/:_id", element: <SubQuestionDetail /> },
+  { path: "subQuestionDetail/edit/:_id", element: <EditSubQuestion /> },
 
   // tag routes
   { path: "tags", element: <Tags /> },
@@ -52,8 +53,8 @@ const adminRoutes = [
   // explore routes
   { path: "explores", element: <Explores /> },
   { path: "explores/create", element: <AddExplore /> },
-  { path: "explores/:_id", element: <ExploreDetail/> },
-  { path: "explores/edit/:_id", element: <EditExplore/> },
+  { path: "explores/:_id", element: <ExploreDetail /> },
+  { path: "explores/edit/:_id", element: <EditExplore /> },
 
   // faqs routes
   { path: "faqs", element: <Faqs /> },
@@ -66,6 +67,9 @@ const adminRoutes = [
   { path: "gutSurvQuestions/create", element: <AddGutQuestion /> },
   { path: "gutSurvQuestions/:_id", element: <GutSurvDetail /> },
   { path: "gutSurvQuestions/edit/:_id", element: <EditGutSurvQuestion /> },
+
+  // users
+  { path: "users", element: <Users /> },
 ];
 
 export default adminRoutes;

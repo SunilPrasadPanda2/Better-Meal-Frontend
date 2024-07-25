@@ -4,7 +4,6 @@ import dalma from "@/assets/images/meals/dalma.jpeg";
 import Header from "@/components/common/Header";
 import { getMeal, editMeal } from "@/api/admin";
 import { toast } from "react-toastify";
-import { Spinner } from "react-bootstrap"; // Assuming you have react-bootstrap installed
 import Loading from "@/pages/common/loading";
 
 export default function EditMeal() {
@@ -96,7 +95,7 @@ export default function EditMeal() {
       .join(", ");
     data.append("tags", tags);
 
-    console.log("data",data);
+    console.log("data", data);
     try {
       await editMeal(data);
       toast.success("Meal Updated Successfully");
@@ -201,24 +200,6 @@ export default function EditMeal() {
                     />
                   </div>
                 </div>
-
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Nutrients <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="nutrientsInfo"
-                      id="nutrientsInfo"
-                      type="text"
-                      className="form-control"
-                      placeholder="Ex: Nutrient1:00g, Nutrient2:00g"
-                      value={formData.nutrientsInfo}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
@@ -231,23 +212,6 @@ export default function EditMeal() {
                       className="form-control"
                       placeholder="Ex: Breakfast, Lunch"
                       value={formData.mealTiming}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Tags <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="tags"
-                      id="tags"
-                      type="text"
-                      className="form-control"
-                      placeholder="Ex: Low Sugar, High Protein"
-                      value={formData.tags}
                       onChange={handleChange}
                     />
                   </div>
@@ -268,6 +232,41 @@ export default function EditMeal() {
                     />
                   </div>
                 </div>
+
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Tags <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="tags"
+                      id="tags"
+                      rows="2"
+                      className="form-control"
+                      placeholder="Ex: Low Sugar, High Protein"
+                      value={formData.tags}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
+
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Nutrients <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="nutrientsInfo"
+                      id="nutrientsInfo"
+                      rows="3"
+                      className="form-control"
+                      placeholder="Ex: Nutrient1:00g, Nutrient2:00g"
+                      value={formData.nutrientsInfo}
+                      onChange={handleChange}
+                    ></textarea>
+                  </div>
+                </div>
+
                 <div className="col-md-12">
                   <div className="mb-3">
                     <label className="form-label">

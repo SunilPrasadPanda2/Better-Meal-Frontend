@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import doctor1 from "../../assets/images/doctors/01.jpg";
 import adminImage from "../../assets/images/adminImage/adminreg.jpeg";
+import { Modal, Button } from "react-bootstrap";
 import {
   FaBars,
   FiSettings,
@@ -18,9 +19,15 @@ export default function TopHeader({ toggle, setToggle }) {
   const [userModal, setUserModal] = useState(false);
   const [loading, setLoading] = useState(false);
   const userModalRef = useRef(null);
+  const [showConfirm, setShowConfirm] = useState(false);
+
+  const showDeleteConfirm = () => {
+    setShowConfirm(true);
+  };
 
   const handleLogout = async () => {
     setLoading(true);
+    setShowConfirm(false);
     try {
       const response = await logout();
       if (response) {
@@ -82,7 +89,7 @@ export default function TopHeader({ toggle, setToggle }) {
               >
                 <button
                   type="button"
-                  onClick={handleLogout}
+                  onClick={() => showDeleteConfirm()}
                   className="dropdown-item text-dark d-flex align-items-center"
                   style={{ textTransform: "none" }}
                   disabled={loading}
@@ -106,6 +113,20 @@ export default function TopHeader({ toggle, setToggle }) {
           </li>
         </ul>
       </div>
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Logout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure, want to logout?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

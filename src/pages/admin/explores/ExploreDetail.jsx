@@ -108,7 +108,15 @@ export default function ExploreDetail() {
               <div className="tab-content mt-0" id="pills-tabContent">
                 <div className="tab-pane fade show active">
                   <div className="row">
-                    <div className="col-md-6">
+                  <div className="col-md-6">
+                      <div className="mb-3 d-flex">
+                        <h6 className="mb-0 me-2">Date: </h6>
+                        <p className="text-muted mb-0">
+                          {new Date(explore.date).toLocaleDateString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-12">
                       <div className="mb-3 d-flex">
                         <h6 className="mb-0 me-2">Advice: </h6>
                         <p className="text-muted mb-0">
@@ -119,14 +127,7 @@ export default function ExploreDetail() {
                       </div>
                     </div>
 
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Date: </h6>
-                        <p className="text-muted mb-0">
-                          {new Date(explore.date).toLocaleDateString()}
-                        </p>
-                      </div>
-                    </div>
+                   
 
                     <div className="col-md-12">
                       <div className="mb-3 d-flex">

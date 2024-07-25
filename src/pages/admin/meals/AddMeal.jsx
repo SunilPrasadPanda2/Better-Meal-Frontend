@@ -50,7 +50,7 @@ const AddMeal = () => {
       if (response.data) {
         toast.success(response.message);
         navigate("/admin/meals");
-      }else if(response.response.status===409){
+      } else if (response.response.status === 409) {
         toast.error(response.response.data.message);
         navigate("/admin/meals");
       }
@@ -165,28 +165,6 @@ const AddMeal = () => {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Nutrients <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="nutrientsInfo"
-                      id="nutrientsInfo"
-                      type="text"
-                      className={`form-control ${
-                        errors.nutrientsInfo ? "is-invalid" : ""
-                      }`}
-                      placeholder="Ex: Nutrient1:00g, Nutrient2:00g"
-                      {...register("nutrientsInfo", { required: true })}
-                    />
-                    {errors.nutrientsInfo && (
-                      <span className="invalid-feedback">
-                        Nutrients are required
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
                       Meal Times <span className="text-danger">*</span>
                     </label>
                     <input
@@ -209,28 +187,6 @@ const AddMeal = () => {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Tags <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="tags"
-                      id="tags"
-                      type="text"
-                      className={`form-control ${
-                        errors.tags ? "is-invalid" : ""
-                      }`}
-                      placeholder="Ex: Low Sugar, High Protein"
-                      {...register("tags", { required: true })}
-                    />
-                    {errors.tags && (
-                      <span className="invalid-feedback">
-                        Tags are required
-                      </span>
-                    )}
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
                       Quantity <span className="text-danger">*</span>
                     </label>
                     <input
@@ -245,7 +201,51 @@ const AddMeal = () => {
                     />
                     {errors.quantity && (
                       <span className="invalid-feedback">
-                        quantity is required
+                        Quantity is required
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Nutrients <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="nutrientsInfo"
+                      id="nutrientsInfo"
+                      rows="2"
+                      className={`form-control ${
+                        errors.nutrientsInfo ? "is-invalid" : ""
+                      }`}
+                      placeholder="Ex: Nutrient1:00g, Nutrient2:00g"
+                      {...register("nutrientsInfo", { required: true })}
+                    ></textarea>
+                    {errors.nutrientsInfo && (
+                      <span className="invalid-feedback">
+                        Nutrients are required
+                      </span>
+                    )}
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Tags <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="tags"
+                      id="tags"
+                      rows="2"
+                      className={`form-control ${
+                        errors.tags ? "is-invalid" : ""
+                      }`}
+                      placeholder="Ex: Low Sugar, High Protein"
+                      {...register("tags", { required: true })}
+                    ></textarea>
+                    {errors.tags && (
+                      <span className="invalid-feedback">
+                        Tags are required
                       </span>
                     )}
                   </div>

@@ -75,7 +75,7 @@ export default function GutSurvDetail() {
                   <div className="row">
                     <div className="col-md-6 ms-2">
                       <div className="mb-3">
-                        <h6 className="mb-0 me-2">Gender</h6>
+                        <h6 className="mb-0 me-2">Gender :</h6>
                         <div className="ms-4">
                           <p className="text-muted mb-0">
                             {questionData?.gender &&

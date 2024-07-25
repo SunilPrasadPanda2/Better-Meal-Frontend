@@ -33,6 +33,7 @@ api.interceptors.response.use(
       try {
         const authData = JSON.parse(localStorage.getItem("persist:auth"));
         const refreshToken = JSON.parse(authData.auth).refreshToken;
+        console.log("refresh token", refreshToken);
         // Call your API to refresh the token
         const newToken = await api.post("/refresh-token", {
           refreshToken: refreshToken,

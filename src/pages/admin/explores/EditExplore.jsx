@@ -173,40 +173,6 @@ export default function EditExplore() {
                 <div className="col-md-6">
                   <div className="mb-3">
                     <label className="form-label">
-                      Advice <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="advice"
-                      id="advice"
-                      type="text"
-                      className="form-control"
-                      placeholder="Advice"
-                      value={formData.advice}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
-                      Tags <span className="text-danger">*</span>
-                    </label>
-                    <input
-                      name="tags"
-                      id="tags"
-                      type="text"
-                      className="form-control"
-                      placeholder="Low Sugar,High Protein"
-                      value={formData.tags}
-                      onChange={handleChange}
-                      required
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  <div className="mb-3">
-                    <label className="form-label">
                       Date <span className="text-danger">*</span>
                     </label>
                     <input
@@ -223,12 +189,46 @@ export default function EditExplore() {
                 <div className="col-md-12">
                   <div className="mb-3">
                     <label className="form-label">
+                      Advice <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="advice"
+                      id="advice"
+                      rows="3"
+                      className="form-control"
+                      placeholder="Advice"
+                      value={formData.advice}
+                      onChange={handleChange}
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
+                      Tags <span className="text-danger">*</span>
+                    </label>
+                    <textarea
+                      name="tags"
+                      id="tags"
+                      rows="2"
+                      className="form-control"
+                      placeholder="Ex: Low Sugar, High Protein"
+                      value={formData.tags}
+                      onChange={handleChange}
+                      required
+                    ></textarea>
+                  </div>
+                </div>
+                <div className="col-md-12">
+                  <div className="mb-3">
+                    <label className="form-label">
                       Description <span className="text-danger">*</span>
                     </label>
                     <textarea
                       name="description"
                       id="description"
-                      rows="2"
+                      rows="3"
                       className="form-control"
                       placeholder="Description"
                       value={formData.description}

@@ -4,11 +4,14 @@ import logoImg from "../../assets/images/logo/bettermeal.jpg";
 import dashboard from "../../assets/images/icons/dashboard.jpg";
 import meals from "../../assets/images/icons/meals.jpg";
 import mealPreference from "../../assets/images/icons/meal_preference.jpg";
+import groupImage from "../../assets/images/icons/groupImage.jpeg";
 import tags from "../../assets/images/icons/tags.jpg";
 import faqs from "../../assets/images/icons/faqs.jpg";
 import explore from "../../assets/images/icons/explore.jpg";
 import gut from "../../assets/images/icons/gut.jpg";
 import { CiLogout } from "../../assets/icons/vander";
+import { toast } from "react-toastify";
+import { Modal, Button } from "react-bootstrap";
 
 import SimpleBar from "simplebar-react";
 import "simplebar-react/dist/simplebar.min.css";
@@ -20,6 +23,7 @@ export default function Sidebar({ manuClass }) {
   const [manu, setManu] = useState("");
   const [subManu, setSubManu] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showConfirm, setShowConfirm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -35,13 +39,20 @@ export default function Sidebar({ manuClass }) {
   }, [location]);
 
   const dispatch = useDispatch();
+
+  const showDeleteConfirm = () => {
+    setShowConfirm(true);
+  };
+
   const handleLogout = async () => {
     setLoading(true);
+    setShowConfirm(false);
     try {
       const response = await logout();
       if (response) {
         dispatch(resetAuth());
         navigate("/login");
+        toast.success("You have logout Successfully");
       }
     } catch (err) {
       console.log("Logout failed. Please try again.", err);
@@ -199,19 +210,41 @@ export default function Sidebar({ manuClass }) {
               Gut Survey Questions
             </Link>
           </li>
+          <li
+            className={`${manu === "users" ? "active" : ""} ms-0`}
+            style={{ transition: "transform 0.2s" }}
+            onMouseEnter={(e) =>
+              (e.currentTarget.style.transform = "scale(1.05)")
+            }
+            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+          >
+            <Link to="/admin/users">
+              <img
+                src={groupImage}
+                style={{ width: "45px", height: "45px" }}
+                className="me-2 d-inline-block mb-0 icon"
+                alt=""
+              />
+              Users
+            </Link>
+          </li>
         </ul>
       </SimpleBar>
       <ul className="sidebar-footer list-unstyled mb-0">
         <li className="list-inline-item mb-0 ms-1">
           <button
             type="button"
-            onClick={handleLogout}
+            onClick={() => showDeleteConfirm()}
             className="dropdown-item text-dark d-flex align-items-center"
             disabled={loading}
           >
             {loading ? (
               <>
-                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                <span
+                  className="spinner-border spinner-border-sm"
+                  role="status"
+                  aria-hidden="true"
+                ></span>
                 <span className="sr-only">Logout...</span>
               </>
             ) : (
@@ -228,6 +261,20 @@ export default function Sidebar({ manuClass }) {
           </button>
         </li>
       </ul>
+      <Modal show={showConfirm} onHide={() => setShowConfirm(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>Confirm Logout</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Are you sure, want to logout?</Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowConfirm(false)}>
+            No
+          </Button>
+          <Button variant="primary" onClick={handleLogout}>
+            Yes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </nav>
   );
 }

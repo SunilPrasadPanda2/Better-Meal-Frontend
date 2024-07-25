@@ -1,17 +1,19 @@
 import { api } from "../utils/services/axios.service";
 
 export const dashboardData = async () => {
-  const authData = JSON.parse(localStorage.getItem("persist:auth"));
-  const token = JSON.parse(authData.auth).token;
+  // const authData = JSON.parse(localStorage.getItem("persist:auth"));
+  // const token = JSON.parse(authData.auth).token;
   try {
-    const response = await api.get("/admin/dashboard", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
+    const response = await api.get("/admin/dashboard"
+    //   , {
+    //   headers: {
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    // }
+  );
     return response.data;
   } catch (error) {
-    console.error("Error adding tag:", error);
+    console.error("Error fetching dashboard data", error);
     throw error;
   }
 };
@@ -568,6 +570,38 @@ export const deleteExplore = async (data) => {
     return response.data;
   } catch (error) {
     console.error("Error deleting subquestion:", error);
+    throw error;
+  }
+};
+
+export const getAllUsers = async () => {
+  const authData = JSON.parse(localStorage.getItem("persist:auth"));
+  const token = JSON.parse(authData.auth).token;
+  try {
+    const response = await api.get("/admin/users", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error adding tag:", error);
+    throw error;
+  }
+};
+
+export const deleteUser = async (_id) => {
+  const authData = JSON.parse(localStorage.getItem("persist:auth"));
+  const token = JSON.parse(authData.auth).token;
+  try {
+    const response = await api.get(`/admin/removeUser/${_id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting tag:", error);
     throw error;
   }
 };

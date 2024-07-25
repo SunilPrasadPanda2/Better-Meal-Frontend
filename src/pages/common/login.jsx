@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import logoImg from "../../assets/images/logo/bettermeal.jpg";
-import bg1 from "../../assets/images/bg/bg-lines-one.png";
-import { FiHome } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiHome } from "../../assets/icons/vander";
 import { useForm } from "react-hook-form";
 import { login } from "../../api/auth";
 import { useDispatch } from "react-redux";
 import { setAuth } from "../../store/authSlice";
+import logoImg from "../../assets/images/logo/bettermeal.jpg";
+import bg1 from "../../assets/images/bg/bg-lines-one.png";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -20,6 +20,11 @@ const Login = () => {
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
   const handleLogin = async (data) => {
     setError("");
@@ -47,9 +52,11 @@ const Login = () => {
     }
   };
 
+
+
   return (
     <>
-      <div className="back-to-home rounded d-none d-sm-block">
+       <div className="back-to-home rounded d-none d-sm-block">
         <Link to="/index" className="btn btn-icon btn-primary">
           <FiHome className="icons" />
         </Link>
@@ -68,16 +75,12 @@ const Login = () => {
               >
                 <div className="card-body">
                   <div className="d-flex align-items-center justify-content-center">
-                    <img
-                      src={logoImg}
-                      height="50"
-                      className="mx-0 d-block mb-2"
-                      alt=""
-                    />
-                    <h4 className="ms-1 mb-0" style={{ color: "#3498db" }}>
-                      <span>BetterMeal</span>
+                    <img src={logoImg} height="50" alt="" />
+                    <h4 className="mb-0" style={{ color: "#3498db" }}>
+                      <span>Better-Meal</span>
                     </h4>
                   </div>
+
                   <h4 className="text-center">Sign In</h4>
                   <form
                     className="login-form mt-4"
@@ -96,11 +99,11 @@ const Login = () => {
                             placeholder="Email"
                             required=""
                             {...register("email", {
-                              required: "Email is required",
+                              required: true,
                               pattern: {
                                 value:
-                                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                                message: "Please enter a valid email",
+                                  /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/, // Regular expression for email validation
+                                message: "Please enter a valid email Id",
                               },
                             })}
                             aria-invalid={errors.email ? "true" : "false"}
@@ -114,20 +117,37 @@ const Login = () => {
                       </div>
 
                       <div className="col-lg-12">
-                        <div className="mb-5">
+                        <div className="mb-5 position-relative">
                           <label className="form-label">
                             Password <span className="text-danger">*</span>
                           </label>
                           <input
                             name="password"
-                            type="password"
+                            type={showPassword ? "text" : "password"}
                             className="form-control"
                             placeholder="Password"
                             {...register("password", {
-                              required: "Password is required",
+                              required: true,
+                              pattern: {
+                                //value: /^[0-9]{4}$/, // Regular expression for 6-digit OTP
+                                message: "Please enter a valid password",
+                              },
                             })}
                             aria-invalid={errors.password ? "true" : "false"}
                           />
+                          <span
+                            onClick={togglePasswordVisibility}
+                            className="position-absolute"
+                            style={{
+                              top: "70%",
+                              right: "20px",
+                              cursor: "pointer",
+                              transform: "translateY(-50%)",
+                              fontSize: "1.5em",
+                            }}
+                          >
+                            {showPassword ? <FiEyeOff /> : <FiEye />}
+                          </span>
                           {errors.password && (
                             <p role="alert" className="text-danger">
                               {errors.password.message}
@@ -135,15 +155,11 @@ const Login = () => {
                           )}
                         </div>
                       </div>
-
                       <div className="col-lg-12 mb-0">
                         <div className="d-grid">
                           <button className="btn btn-primary" type="submit" disabled={loading}>
                             {loading ? (
-                              <>
-                                <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                                <span className="sr-only">Sign in...</span>
-                              </>
+                              <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
                             ) : (
                               "Sign in"
                             )}
@@ -151,12 +167,12 @@ const Login = () => {
                         </div>
                       </div>
                     </div>
+                    {error && (
+                      <div className="text-danger mt-3">
+                        {error}
+                      </div>
+                    )}
                   </form>
-                  {error && (
-                    <div className="mt-3">
-                      <p className="text-danger">{error}</p>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>

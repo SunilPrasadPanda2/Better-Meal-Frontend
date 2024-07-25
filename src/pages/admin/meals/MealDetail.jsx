@@ -144,8 +144,8 @@ const MealDetail = () => {
 
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Nutrients: </h6>
-                        <p className="text-muted mb-0">{nutrientsInfo}</p>
+                        <h6 className="mb-0 me-2">Quantity: </h6>
+                        <p className="text-muted mb-0">{quantity}</p>
                       </div>
                     </div>
 
@@ -158,29 +158,38 @@ const MealDetail = () => {
 
                     <div className="col-md-6">
                       <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Tags: </h6>
-                        <p className="text-muted mb-0">{safeTags}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex">
-                        <h6 className="mb-0 me-2">Quantity: </h6>
-                        <p className="text-muted mb-0">{quantity}</p>
-                      </div>
-                    </div>
-
-                    <div className="col-md-6">
-                      <div className="mb-3 d-flex">
                         <h6 className="mb-0 me-2">Ratings: </h6>
                         <p className="text-muted mb-0">5 Star</p>
                       </div>
                     </div>
 
                     <div className="col-md-12">
+                      <div className="mb-3 d-flex">
+                        <h6 className="mb-0 me-2">Tags: </h6>
+                        <p className="text-muted mb-0 text-wrap text-break">{safeTags}</p>
+                      </div>
+                    </div>
+
+                    {/* <div className="col-md-12">
+                      <div className="mb-3 d-flex">
+                        <h6 className="mb-0 me-2">Nutrients: </h6>
+                        <p className="text-muted mb-0">{nutrientsInfo}</p>
+                      </div>
+                    </div> */}
+                    
+                    <div className="col-md-12">
+                      <div className="mb-3 d-flex">
+                        <h6 className="mb-0 me-2">Nutrients: </h6>
+                        <p className="text-muted mb-0 text-wrap text-break">
+                          {nutrientsInfo}
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="col-md-12">
                       <div className="mb-3 d-flex ">
                         <h6 className="mb-0 me-2">Description: </h6>
-                        <p className="text-muted mb-0">
+                        <p className="text-muted mb-0 text-wrap text-break">
                           {description &&
                             description.charAt(0).toUpperCase() +
                               description.slice(1)}

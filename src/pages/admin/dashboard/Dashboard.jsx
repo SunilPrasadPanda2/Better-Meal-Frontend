@@ -6,6 +6,7 @@ import mealPreference from "../../../assets/images/icons/meal_preference.jpg";
 import tags from "../../../assets/images/icons/tags.jpg";
 import faqs from "../../../assets/images/icons/faqs.jpg";
 import explore from "../../../assets/images/icons/explore.jpg";
+import groupImage from "../../../assets/images/icons/groupImage.jpeg";
 import gut from "../../../assets/images/icons/gut.jpg";
 import Loading from "@/pages/common/loading";
 
@@ -17,6 +18,7 @@ const Index = () => {
     const fetchData = async () => {
       try {
         const responseData = await dashboardData();
+        // console.log("dashboard response",responseData);
         setData(responseData.data);
       } catch (error) {
         console.error("Error fetching dashboard data:", error);
@@ -235,55 +237,6 @@ const Index = () => {
 
               <div className="col-xl-4 col-md-6 mt-4">
                 <Link
-                  to={`/admin/explores`}
-                  className="d-flex align-items-center my-auto"
-                >
-                  <div
-                    className="card features feature-primary rounded border-0 p-4"
-                    style={{
-                      height: "170px",
-                      width: "300px",
-                      boxShadow: "none",
-                      transition:
-                        "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out",
-                      transform: "scale(1)",
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.boxShadow =
-                        "0 4px 8px rgba(0, 0, 0, 0.2)";
-                      e.currentTarget.style.transform = "scale(1.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.boxShadow = "none";
-                      e.currentTarget.style.transform = "scale(1)";
-                    }}
-                  >
-                    <div className="d-flex align-items-center my-auto">
-                      <div className="icon text-center rounded-md">
-                        {/* <VscRemoteExplorer className="h3 mb-0" /> */}
-                        <img
-                          src={explore}
-                          style={{ width: "65px", height: "65px" }}
-                          className="h3 mb-0"
-                          alt=""
-                        />
-                      </div>
-
-                      <div className="flex-1 ms-3 d-flex align-items-center">
-                        <h5 className="mb-0">
-                          Explore :{" "}
-                          <span className="text-primary fw-bold">
-                            {data.exploreMealsCount}
-                          </span>
-                        </h5>
-                      </div>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-
-              <div className="col-xl-4 col-md-6 mt-4">
-                <Link
                   to={`/admin/gutSurvQuestions`}
                   className="d-flex align-items-center my-auto"
                 >
@@ -322,6 +275,54 @@ const Index = () => {
                           Gut Survey Questions :{" "}
                           <span className="text-primary fw-bold">
                             {data.gutSurveyQuestionsCount}
+                          </span>
+                        </h5>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+              <div className="col-xl-4 col-md-6 mt-4">
+                <Link
+                  to={`/admin/users`}
+                  className="d-flex align-items-center my-auto"
+                >
+                  <div
+                    className="card features feature-primary rounded border-0 p-4"
+                    style={{
+                      height: "170px",
+                      width: "300px",
+                      boxShadow: "none",
+                      transition:
+                        "box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out",
+                      transform: "scale(1)",
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.boxShadow =
+                        "0 4px 8px rgba(0, 0, 0, 0.2)";
+                      e.currentTarget.style.transform = "scale(1.05)";
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.boxShadow = "none";
+                      e.currentTarget.style.transform = "scale(1)";
+                    }}
+                  >
+                    <div className="d-flex align-items-center my-auto">
+                      <div className="icon text-center rounded-md">
+                        {/* <VscRemoteExplorer className="h3 mb-0" /> */}
+                        <img
+                          src={groupImage}
+                          style={{ width: "65px", height: "65px" }}
+                          className="h3 mb-0"
+                          alt=""
+                        />
+                      </div>
+
+                      <div className="flex-1 ms-3 d-flex align-items-center">
+                        <h5 className="mb-0">
+                          Users :{" "}
+                          <span className="text-primary fw-bold">
+                            {data.userCount}
                           </span>
                         </h5>
                       </div>
