@@ -9,7 +9,7 @@ import adminRoutes from "./routes/admin.routes";
 import AdminLayout from "./layout/admin.layout";
 import { useSelector } from "react-redux";
 import { selectIsAuthenticated, selectUserType } from "./store/authSlice";
-
+import Users from "./pages/admin/users/users";
 function App() {
   const isAuthenticated = useSelector(selectIsAuthenticated);
   const userType = useSelector(selectUserType);
@@ -19,10 +19,16 @@ function App() {
       <Routes>
         {/* Redirect to admin dashboard if authenticated */}
         {isAuthenticated ? (
-          <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route
+            path="/"
+            element={<Navigate to="/admin/dashboard" replace />}
+          />
         ) : (
           // Display login page if not authenticated
-          <Route path="/" element={<Login />} />
+          <>
+            <Route path="/" element={<Login />} />
+            <Route path="/admin/users" element={<Users />} />
+          </>
         )}
 
         {/* Render admin routes */}
