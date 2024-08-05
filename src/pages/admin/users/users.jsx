@@ -78,9 +78,9 @@ function users() {
   };
   return (
     <>
-      {/* <Header
+      <Header
         title="Users"
-      /> */}
+      />
       <div className="row">
         <div className="col-10 mt-4 mx-auto">
           {loading ? ( // Render spinner if loading is true

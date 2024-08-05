@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import meal from "@/assets/images/meals/mealimage.jpg";
+import camera from "@/assets/images/meals/camera.png";
 import Header from "@/components/common/Header";
 import { addMeal } from "@/api/admin";
 import { useForm } from "react-hook-form";
@@ -8,7 +9,7 @@ import { toast } from "react-toastify";
 
 const AddMeal = () => {
   const navigate = useNavigate();
-  const [imageURL, setImageURL] = useState(meal);
+  const [imageURL, setImageURL] = useState(camera);
   const [image, setImage] = useState();
   const [loading, setLoading] = useState(false);
 
